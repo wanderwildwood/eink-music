@@ -184,6 +184,10 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
+            // Signed with the checked-in persistent-debug.keystore (same key used for debug
+            // builds) so every release upgrades in place — no real security value, chosen for
+            // convenience on a personal-use fork with no Play Store distribution.
+            signingConfig = signingConfigs.getByName("persistentDebug")
         }
         debug {
             if (applicationIdOverride == null) {
