@@ -307,7 +307,7 @@ fun HistoryScreen(
                                                 )
                                             }
                                         },
-                                    ).animateItem(),
+                                    ),
                         )
                     }
                 }
@@ -392,7 +392,7 @@ fun HistoryScreen(
                                                 onCheckedChange(true)
                                             }
                                         },
-                                    ).animateItem(),
+                                    ),
                         )
                     }
                 }

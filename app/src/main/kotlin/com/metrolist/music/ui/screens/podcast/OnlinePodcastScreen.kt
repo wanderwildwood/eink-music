@@ -218,7 +218,7 @@ fun OnlinePodcastScreen(
                                         }
                                     }
                                 )
-                                .animateItem(),
+                                ,
                             trailingContent = {
                                 IconButton(onClick = {
                                     menuState.show {

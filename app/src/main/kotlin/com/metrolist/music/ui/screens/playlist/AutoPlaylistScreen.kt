@@ -556,7 +556,7 @@ fun AutoPlaylistScreen(
                                 downloadState = downloadState,
                                 onShowRemoveDownloadDialog = { showRemoveDownloadDialog = true },
                                 menuState = menuState,
-                                modifier = Modifier.animateItem(),
+                                modifier = Modifier,
                             )
                         }
                     }
@@ -672,7 +672,7 @@ fun AutoPlaylistScreen(
                                                 }
                                             }
                                         },
-                                    ).animateItem(),
+                                    ),
                         )
                     }
                 }
@@ -704,18 +704,7 @@ fun AutoPlaylistScreen(
 
         // Upload FAB for uploaded playlist - positioned above mini player
         if (playlistType == PlaylistType.UPLOADED) {
-            androidx.compose.animation.AnimatedVisibility(
-                visible = state.isScrollingUp(),
-                enter = androidx.compose.animation.slideInVertically { it },
-                exit = androidx.compose.animation.slideOutVertically { it },
-                modifier =
-                    Modifier
-                        .align(Alignment.BottomEnd)
-                        .windowInsetsPadding(
-                            LocalPlayerAwareWindowInsets.current
-                                .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal),
-                        ).padding(16.dp),
-            ) {
+            if (state.isScrollingUp()) {
                 FloatingActionButton(
                     onClick = {
                         filePickerLauncher.launch(
@@ -729,6 +718,13 @@ fun AutoPlaylistScreen(
                             ),
                         )
                     },
+                    modifier =
+                        Modifier
+                            .align(Alignment.BottomEnd)
+                            .windowInsetsPadding(
+                                LocalPlayerAwareWindowInsets.current
+                                    .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal),
+                            ).padding(16.dp),
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.upload),

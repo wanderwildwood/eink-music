@@ -19,7 +19,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
+import com.metrolist.music.ui.component.NoAnimationAlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -127,7 +127,7 @@ fun LastFMSettings(
         var tempUsername by rememberSaveable { mutableStateOf("") }
         var tempPassword by rememberSaveable { mutableStateOf("") }
 
-        AlertDialog(
+        NoAnimationAlertDialog(
             properties = DialogProperties(usePlatformDefaultWidth = false),
             onDismissRequest = {
                 if (!isLoggingIn) {

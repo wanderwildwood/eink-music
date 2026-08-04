@@ -373,7 +373,7 @@ fun ExploreScreen(
                                                     )
                                                 }
                                             },
-                                        ).animateItem(),
+                                        ),
                             )
                         }
                     }
@@ -422,7 +422,7 @@ fun ExploreScreen(
                                                     )
                                                 }
                                             },
-                                        ).animateItem(),
+                                        ),
                             )
                         }
                     }

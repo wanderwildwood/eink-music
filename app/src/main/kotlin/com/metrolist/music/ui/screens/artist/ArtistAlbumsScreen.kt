@@ -136,7 +136,7 @@ fun ArtistAlbumsScreen(
                     album = album,
                     isActive = album.id == mediaMetadata?.album?.id,
                     isPlaying = isPlaying,
-                    modifier = Modifier.animateItem(),
+                    modifier = Modifier,
                 )
             }
         }

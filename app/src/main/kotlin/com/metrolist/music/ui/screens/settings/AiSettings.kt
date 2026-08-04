@@ -18,7 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
+import com.metrolist.music.ui.component.NoAnimationAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -172,7 +172,7 @@ fun AiSettings(navController: NavController) {
     var showSystemPromptDialog by rememberSaveable { mutableStateOf(false) }
 
     if (showProviderHelpDialog) {
-        AlertDialog(
+        NoAnimationAlertDialog(
             onDismissRequest = { showProviderHelpDialog = false },
             confirmButton = {
                 TextButton(onClick = { showProviderHelpDialog = false }) {
@@ -239,7 +239,7 @@ fun AiSettings(navController: NavController) {
     }
 
     if (showTranslateModeHelpDialog) {
-        AlertDialog(
+        NoAnimationAlertDialog(
             onDismissRequest = { showTranslateModeHelpDialog = false },
             confirmButton = {
                 TextButton(onClick = { showTranslateModeHelpDialog = false }) {

@@ -94,13 +94,8 @@ private fun WizardScreenContent(
             ) {
                 HorizontalDivider()
 
-                AnimatedContent(
-                    targetState = state.currentStep,
-                    label = "wizard_step",
-                    transitionSpec = {
-                        (slideInHorizontally { it } + fadeIn()).togetherWith(slideOutHorizontally { -it } + fadeOut())
-                    }
-                ) { step ->
+                run {
+                    val step = state.currentStep
                     when (step) {
                         WizardStep.MODEL_SELECTION -> ModelSelectionStep(
                             searchQuery = state.modelSearchQuery,

@@ -148,11 +148,7 @@ fun AlbumMenu(
 
     var refetchIconDegree by remember { mutableFloatStateOf(0f) }
 
-    val rotationAnimation by animateFloatAsState(
-        targetValue = refetchIconDegree,
-        animationSpec = tween(durationMillis = 800),
-        label = "",
-    )
+    val rotationAnimation = refetchIconDegree
 
     val isPinned by database.speedDialDao.isPinned(album.id).collectAsStateWithLifecycle(initialValue = false)
 

@@ -5,9 +5,6 @@
 
 package com.metrolist.music.ui.player
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
@@ -303,33 +300,27 @@ fun Thumbnail(
             }
     ) {
         // Error view
-        AnimatedVisibility(
-            visible = error != null,
-            enter = fadeIn(),
-            exit = fadeOut(),
-            modifier = Modifier
-                .padding(32.dp)
-                .align(Alignment.Center),
-        ) {
-            error?.let { playbackError ->
-                PlaybackError(
-                    error = playbackError,
-                    retry = playerConnection.player::prepare,
-                )
+        if (error != null) {
+            Box(
+                modifier = Modifier
+                    .padding(32.dp)
+                    .align(Alignment.Center),
+            ) {
+                error?.let { playbackError ->
+                    PlaybackError(
+                        error = playbackError,
+                        retry = playerConnection.player::prepare,
+                    )
+                }
             }
         }
 
         // Main thumbnail view
-        AnimatedVisibility(
-            visible = error == null,
-            enter = fadeIn(),
-            exit = fadeOut(),
-            modifier = Modifier
-                .fillMaxSize()
-                .then(if (!isLandscape) Modifier.statusBarsPadding() else Modifier),
-        ) {
+        if (error == null) {
             Column(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .then(if (!isLandscape) Modifier.statusBarsPadding() else Modifier),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = if (isLandscape) Arrangement.Center else Arrangement.Top
             ) {
@@ -419,13 +410,10 @@ fun Thumbnail(
             }
         }
 
-        AnimatedVisibility(
-            visible = showSeekEffect,
-            enter = fadeIn(),
-            exit = fadeOut(),
-            modifier = Modifier.align(Alignment.Center)
-        ) {
-            SeekEffectOverlay(seekDirection = seekDirection)
+        if (showSeekEffect) {
+            Box(modifier = Modifier.align(Alignment.Center)) {
+                SeekEffectOverlay(seekDirection = seekDirection)
+            }
         }
     }
 }

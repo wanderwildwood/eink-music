@@ -487,7 +487,7 @@ fun LibraryMixScreen(
                                         .fillMaxWidth()
                                         .clickable {
                                             navController.navigate("auto_playlist/liked")
-                                        }.animateItem(),
+                                        },
                             )
                         }
                     }
@@ -506,7 +506,7 @@ fun LibraryMixScreen(
                                         .clickable {
                                             navController.navigate("auto_playlist/downloaded")
                                         }
-                                        .animateItem(),
+                                        ,
                             )
                         }
                     }
@@ -525,7 +525,7 @@ fun LibraryMixScreen(
                                     .clickable {
                                         navController.navigate("cache_playlist/cached")
                                     }
-                                    .animateItem(),
+                                    ,
                             )
                         }
                     }
@@ -543,7 +543,7 @@ fun LibraryMixScreen(
                                         .fillMaxWidth()
                                         .clickable {
                                             navController.navigate("top_playlist/$topSize")
-                                        }.animateItem(),
+                                        },
                             )
                         }
                     }
@@ -561,7 +561,7 @@ fun LibraryMixScreen(
                                         .fillMaxWidth()
                                         .clickable {
                                             navController.navigate("auto_playlist/uploaded")
-                                        }.animateItem(),
+                                        },
                             )
                         }
                     }
@@ -616,7 +616,7 @@ fun LibraryMixScreen(
                                                         )
                                                     }
                                                 },
-                                            ).animateItem(),
+                                            ),
                                 )
                             }
 
@@ -671,7 +671,7 @@ fun LibraryMixScreen(
                                                     }
                                                 },
                                             )
-                                            .animateItem(),
+                                            ,
                                 )
                             }
 
@@ -713,7 +713,7 @@ fun LibraryMixScreen(
                                                         )
                                                     }
                                                 },
-                                            ).animateItem(),
+                                            ),
                                 )
                             }
 
@@ -755,7 +755,7 @@ fun LibraryMixScreen(
                                                         )
                                                     }
                                                 },
-                                            ).animateItem(),
+                                            ),
                                 )
                             }
 
@@ -773,7 +773,7 @@ fun LibraryMixScreen(
                         searchQuery.isNotBlank()
                     ) {
                         item(key = "empty_search_result") {
-                            LibrarySearchEmptyPlaceholder(modifier = Modifier.animateItem())
+                            LibrarySearchEmptyPlaceholder(modifier = Modifier)
                         }
                     }
                 }
@@ -820,7 +820,7 @@ fun LibraryMixScreen(
                                             onClick = {
                                                 navController.navigate("auto_playlist/liked")
                                             },
-                                        ).animateItem(),
+                                        ),
                             )
                         }
                     }
@@ -842,7 +842,7 @@ fun LibraryMixScreen(
                                                 navController.navigate("auto_playlist/downloaded")
                                             },
                                         )
-                                        .animateItem(),
+                                        ,
                             )
                         }
                     }
@@ -864,7 +864,7 @@ fun LibraryMixScreen(
                                             navController.navigate("cache_playlist/cached")
                                         },
                                     )
-                                    .animateItem(),
+                                    ,
                             )
                         }
                     }
@@ -885,7 +885,7 @@ fun LibraryMixScreen(
                                             onClick = {
                                                 navController.navigate("top_playlist/$topSize")
                                             },
-                                        ).animateItem(),
+                                        ),
                             )
                         }
                     }
@@ -904,7 +904,7 @@ fun LibraryMixScreen(
                                         .fillMaxWidth()
                                         .clickable {
                                             navController.navigate("auto_playlist/uploaded")
-                                        }.animateItem(),
+                                        },
                             )
                         }
                     }
@@ -942,7 +942,7 @@ fun LibraryMixScreen(
                                                         )
                                                     }
                                                 },
-                                            ).animateItem(),
+                                            ),
                                 )
                             }
 
@@ -981,7 +981,7 @@ fun LibraryMixScreen(
                                                     }
                                                 },
                                             )
-                                            .animateItem(),
+                                            ,
                                 )
                             }
 
@@ -1006,7 +1006,7 @@ fun LibraryMixScreen(
                                                         )
                                                     }
                                                 },
-                                            ).animateItem(),
+                                            ),
                                 )
                             }
 
@@ -1033,7 +1033,7 @@ fun LibraryMixScreen(
                                                         )
                                                     }
                                                 },
-                                            ).animateItem(),
+                                            ),
                                 )
                             }
 
@@ -1054,7 +1054,7 @@ fun LibraryMixScreen(
                             key = "empty_search_result",
                             span = { GridItemSpan(maxLineSpan) },
                         ) {
-                            LibrarySearchEmptyPlaceholder(modifier = Modifier.animateItem())
+                            LibrarySearchEmptyPlaceholder(modifier = Modifier)
                         }
                     }
                 }

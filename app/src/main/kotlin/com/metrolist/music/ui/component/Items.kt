@@ -8,7 +8,6 @@
 package com.metrolist.music.ui.component
 
 import android.widget.Toast
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animate
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandIn
@@ -1486,17 +1485,11 @@ fun ItemThumbnail(
             )
         }
 
-        if (albumIndex != null) {
-            AnimatedVisibility(
-                visible = !isActive,
-                enter = fadeIn() + expandIn(expandFrom = Alignment.Center),
-                exit = shrinkOut(shrinkTowards = Alignment.Center) + fadeOut()
-            ) {
-                Text(
-                    text = albumIndex.toString(),
-                    style = MaterialTheme.typography.labelLarge
-                )
-            }
+        if (albumIndex != null && !isActive) {
+            Text(
+                text = albumIndex.toString(),
+                style = MaterialTheme.typography.labelLarge
+            )
         }
 
         if (isSelected) {
@@ -1563,11 +1556,7 @@ fun LocalThumbnail(
             modifier = Modifier.fillMaxSize()
         )
 
-        AnimatedVisibility(
-            visible = isActive,
-            enter = fadeIn(tween(500)),
-            exit = fadeOut(tween(500))
-        ) {
+        if (isActive) {
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
@@ -1589,53 +1578,39 @@ fun LocalThumbnail(
             }
         }
 
-        if (showCenterPlay) {
-            AnimatedVisibility(
-                visible = !(isActive && isPlaying),
-                enter = fadeIn(),
-                exit = fadeOut(),
+        if (showCenterPlay && !(isActive && isPlaying)) {
+            Box(
+                contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .align(Alignment.Center)
                     .padding(8.dp)
+                    .size(36.dp)
+                    .clip(CircleShape)
+                    .background(Color.Black.copy(alpha = 0.6f))
             ) {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .size(36.dp)
-                        .clip(CircleShape)
-                        .background(Color.Black.copy(alpha = 0.6f))
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.play),
-                        contentDescription = null,
-                        tint = Color.White
-                    )
-                }
+                Icon(
+                    painter = painterResource(R.drawable.play),
+                    contentDescription = null,
+                    tint = Color.White
+                )
             }
         }
 
         if (playButtonVisible) {
-            AnimatedVisibility(
-                visible = true,
-                enter = fadeIn(),
-                exit = fadeOut(),
+            Box(
+                contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(8.dp)
+                    .size(36.dp)
+                    .clip(CircleShape)
+                    .background(Color.Black.copy(alpha = ActiveBoxAlpha))
             ) {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .size(36.dp)
-                        .clip(CircleShape)
-                        .background(Color.Black.copy(alpha = ActiveBoxAlpha))
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.play),
-                        contentDescription = null,
-                        tint = Color.White
-                    )
-                }
+                Icon(
+                    painter = painterResource(R.drawable.play),
+                    contentDescription = null,
+                    tint = Color.White
+                )
             }
         }
     }
@@ -1713,16 +1688,11 @@ fun PlaylistThumbnail(
 fun BoxScope.OverlayPlayButton(
     visible: Boolean
 ) {
-    AnimatedVisibility(
-        visible = visible,
-        enter = fadeIn(),
-        exit = fadeOut(),
-        modifier = Modifier
-            .align(Alignment.Center)
-    ) {
+    if (visible) {
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
+                .align(Alignment.Center)
                 .size(36.dp)
                 .clip(CircleShape)
                 .background(Color.Black.copy(alpha = ActiveBoxAlpha))
@@ -1743,17 +1713,12 @@ fun BoxScope.OverlayEditButton(
     onClick: () -> Unit,
     alignment: Alignment = Alignment.Center,
 ) {
-    AnimatedVisibility(
-        visible = visible,
-        enter = fadeIn(),
-        exit = fadeOut(),
-        modifier = Modifier
-            .align(alignment)
-            .then(if (alignment == Alignment.BottomEnd) Modifier.padding(8.dp) else Modifier)
-    ) {
+    if (visible) {
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
+                .align(alignment)
+                .then(if (alignment == Alignment.BottomEnd) Modifier.padding(8.dp) else Modifier)
                 .size(36.dp)
                 .clip(CircleShape)
                 .background(Color.Black.copy(alpha = ActiveBoxAlpha))
@@ -1775,17 +1740,12 @@ fun BoxScope.AlbumPlayButton(
     visible: Boolean,
     onClick: () -> Unit,
 ) {
-    AnimatedVisibility(
-        visible = visible,
-        enter = fadeIn(),
-        exit = fadeOut(),
-        modifier = Modifier
-            .align(Alignment.BottomEnd)
-            .padding(8.dp)
-    ) {
+    if (visible) {
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(8.dp)
                 .size(36.dp)
                 .clip(CircleShape)
                 .background(Color.Black.copy(alpha = ActiveBoxAlpha))

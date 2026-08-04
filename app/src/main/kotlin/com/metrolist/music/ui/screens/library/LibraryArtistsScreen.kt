@@ -258,13 +258,13 @@ fun LibraryArtistsScreen(
                                     LibrarySearchEmptyPlaceholder(
                                         icon = R.drawable.search,
                                         text = stringResource(R.string.no_results_found),
-                                        modifier = Modifier.animateItem(),
+                                        modifier = Modifier,
                                     )
                                 } else {
                                     LibrarySearchEmptyPlaceholder(
                                         icon = R.drawable.artist,
                                         text = stringResource(R.string.library_artist_empty),
-                                        modifier = Modifier.animateItem(),
+                                        modifier = Modifier,
                                     )
                                 }
                             }
@@ -278,7 +278,7 @@ fun LibraryArtistsScreen(
                             LibraryArtistListItem(
                                 menuState = menuState,
                                 coroutineScope = coroutineScope,
-                                modifier = Modifier.animateItem(),
+                                modifier = Modifier,
                                 artist = artist
                             )
                         }
@@ -317,13 +317,13 @@ fun LibraryArtistsScreen(
                                     LibrarySearchEmptyPlaceholder(
                                         icon = R.drawable.search,
                                         text = stringResource(R.string.no_results_found),
-                                        modifier = Modifier.animateItem(),
+                                        modifier = Modifier,
                                     )
                                 } else {
                                     LibrarySearchEmptyPlaceholder(
                                         icon = R.drawable.artist,
                                         text = stringResource(R.string.library_artist_empty),
-                                        modifier = Modifier.animateItem(),
+                                        modifier = Modifier,
                                     )
                                 }
                             }
@@ -337,7 +337,7 @@ fun LibraryArtistsScreen(
                             LibraryArtistGridItem(
                                 menuState = menuState,
                                 coroutineScope = coroutineScope,
-                                modifier = Modifier.animateItem(),
+                                modifier = Modifier,
                                 artist = artist
                             )
                         }

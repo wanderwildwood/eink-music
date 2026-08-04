@@ -201,7 +201,7 @@ fun CachePlaylistScreen(
                     EmptyPlaceholder(
                         icon = R.drawable.music_note,
                         text = stringResource(R.string.playlist_is_empty),
-                        modifier = Modifier.animateItem()
+                        modifier = Modifier
                     )
                 }
             }
@@ -211,7 +211,7 @@ fun CachePlaylistScreen(
                     EmptyPlaceholder(
                         icon = R.drawable.search,
                         text = stringResource(R.string.no_results_found),
-                        modifier = Modifier.animateItem()
+                        modifier = Modifier
                     )
                 }
             } else {
@@ -221,7 +221,7 @@ fun CachePlaylistScreen(
                             songs = filteredSongs,
                             context = context,
                             menuState = menuState,
-                            modifier = Modifier.animateItem()
+                            modifier = Modifier
                         )
                     }
                 }
@@ -232,7 +232,7 @@ fun CachePlaylistScreen(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
                                 .padding(start = 16.dp)
-                                .animateItem(),
+                                ,
                         ) {
                             SortHeader(
                                 sortType = sortType,
@@ -292,7 +292,7 @@ fun CachePlaylistScreen(
                         },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .animateItem()
+                            
                             .combinedClickable(
                                 onClick = {
                                     if (inSelectMode) {
@@ -335,7 +335,7 @@ fun CachePlaylistScreen(
                                     }
                                 }
                             )
-                            .animateItem()
+                            
                     )
                 }
             }

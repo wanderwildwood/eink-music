@@ -225,7 +225,7 @@ fun ChartsScreen(
                                         "Trending" -> stringResource(R.string.trending)
                                         else -> section.title.ifEmpty { stringResource(R.string.charts) }
                                     },
-                                modifier = Modifier.animateItem(),
+                                modifier = Modifier,
                             )
                         }
                         item(key = "section_content_${section.title}") {
@@ -256,7 +256,7 @@ fun ChartsScreen(
                                         Modifier
                                             .fillMaxWidth()
                                             .height(ListItemHeight * 4)
-                                            .animateItem(),
+                                            ,
                                 ) {
                                     items(
                                         items = section.items.filterIsInstance<SongItem>().distinctBy { it.id },
@@ -321,7 +321,7 @@ fun ChartsScreen(
                         item(key = "top_videos_title") {
                             NavigationTitle(
                                 title = stringResource(R.string.top_music_videos),
-                                modifier = Modifier.animateItem(),
+                                modifier = Modifier,
                             )
                         }
                         item(key = "top_videos_content") {
@@ -330,7 +330,7 @@ fun ChartsScreen(
                                     WindowInsets.systemBars
                                         .only(WindowInsetsSides.Horizontal)
                                         .asPaddingValues(),
-                                modifier = Modifier.animateItem(),
+                                modifier = Modifier,
                             ) {
                                 items(
                                     items = topVideosSection.items.filterIsInstance<SongItem>().distinctBy { it.id },
@@ -365,7 +365,7 @@ fun ChartsScreen(
                                                             )
                                                         }
                                                     },
-                                                ).animateItem(),
+                                                ),
                                     )
                                 }
                             }

@@ -462,7 +462,7 @@ fun ArtistScreen(
                                         .fillMaxWidth()
                                         .padding(horizontal = 16.dp)
                                         .padding(bottom = 16.dp)
-                                        .animateItem(),
+                                        ,
                             ) {
                                 if (showArtistDescription && (!description.isNullOrEmpty() || !descriptionRuns.isNullOrEmpty())) {
                                     Text(
@@ -533,7 +533,7 @@ fun ArtistScreen(
                         item(key = "local_songs_title") {
                             NavigationTitle(
                                 title = stringResource(R.string.songs),
-                                modifier = Modifier.animateItem(),
+                                modifier = Modifier,
                                 onClick = {
                                     navController.navigate("artist/${viewModel.artistId}/songs")
                                 },
@@ -600,7 +600,7 @@ fun ArtistScreen(
                                                     )
                                                 }
                                             },
-                                        ).animateItem(),
+                                        ),
                             )
                         }
                     }
@@ -609,7 +609,7 @@ fun ArtistScreen(
                         item(key = "local_albums_title") {
                             NavigationTitle(
                                 title = stringResource(R.string.albums),
-                                modifier = Modifier.animateItem(),
+                                modifier = Modifier,
                                 onClick = {
                                     navController.navigate("artist/${viewModel.artistId}/albums")
                                 },
@@ -650,7 +650,7 @@ fun ArtistScreen(
                                                             )
                                                         }
                                                     },
-                                                ).animateItem(),
+                                                ),
                                     )
                                 }
                             }
@@ -662,7 +662,7 @@ fun ArtistScreen(
                             item(key = "section_${section.title}") {
                                 NavigationTitle(
                                     title = section.title,
-                                    modifier = Modifier.animateItem(),
+                                    modifier = Modifier,
                                     onClick =
                                         section.moreEndpoint?.let {
                                             {
@@ -727,7 +727,7 @@ fun ArtistScreen(
                                                         )
                                                     }
                                                 },
-                                            ).animateItem(),
+                                            ),
                                 )
                             }
                         } else {
@@ -844,7 +844,7 @@ fun ArtistScreen(
                                                                 }
                                                             }
                                                         },
-                                                    ).animateItem(),
+                                                    ),
                                         )
                                     }
                                 }
@@ -881,10 +881,8 @@ fun ArtistScreen(
             )
 
         if (canPlayAll) {
-            androidx.compose.animation.AnimatedVisibility(
-                visible = isScrollingUp,
-                enter = androidx.compose.animation.slideInVertically { it * 2 },
-                exit = androidx.compose.animation.slideOutVertically { it * 2 },
+            if (isScrollingUp) {
+              Box(
                 modifier =
                     Modifier
                         .align(Alignment.BottomEnd)
@@ -895,7 +893,7 @@ fun ArtistScreen(
                         // Add padding to position it above the other FAB (56dp height + 16dp padding + 8dp spacing)
                         // If the other FAB is visible.
                         .padding(bottom = if (showLocalFab) 64.dp else 0.dp),
-            ) {
+              ) {
                 val onPlayAllClick: () -> Unit = {
                     if (!isGuest) {
                         if (showLocal) {
@@ -992,6 +990,7 @@ fun ArtistScreen(
                         )
                     }
                 }
+              }
             }
         }
 

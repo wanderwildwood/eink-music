@@ -450,24 +450,10 @@ fun ModeCircle(
     }
     
     // Animated border width
-    val borderWidth by animateDpAsState(
-        targetValue = if (isSelected) 3.dp else 0.dp,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessMedium
-        ),
-        label = "borderWidth"
-    )
+    val borderWidth = if (isSelected) 3.dp else 0.dp
     
     // Animated scale for the entire circle
-    val scale by animateFloatAsState(
-        targetValue = if (isSelected) 1.05f else 1f,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessMedium
-        ),
-        label = "scale"
-    )
+    val scale = if (isSelected) 1.05f else 1f
     
     val interactionSource = remember { MutableInteractionSource() }
     
@@ -518,20 +504,7 @@ fun ModeCircle(
                 )
             }
             isSelected -> {
-                AnimatedVisibility(
-                    visible = isSelected,
-                    enter = fadeIn(animationSpec = tween(300)) + scaleIn(
-                        initialScale = 0.3f,
-                        animationSpec = spring(
-                            dampingRatio = Spring.DampingRatioMediumBouncy,
-                            stiffness = Spring.StiffnessMedium
-                        )
-                    ),
-                    exit = fadeOut(animationSpec = tween(150)) + scaleOut(
-                        targetScale = 0.3f,
-                        animationSpec = tween(150)
-                    )
-                ) {
+                if (isSelected) {
                     Icon(
                         painter = painterResource(R.drawable.check),
                         contentDescription = null,
@@ -558,32 +531,11 @@ fun PaletteItem(
         style = PaletteStyle.TonalSpot
     )
     
-    val cornerRadius by animateDpAsState(
-        targetValue = if (isSelected) 48.dp * 0.25f else 24.dp,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioLowBouncy,
-            stiffness = Spring.StiffnessMedium
-        ),
-        label = "cornerRadius"
-    )
+    val cornerRadius = if (isSelected) 48.dp * 0.25f else 24.dp
     
-    val borderWidth by animateDpAsState(
-        targetValue = if (isSelected) 3.dp else 0.dp,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessMedium
-        ),
-        label = "borderWidth"
-    )
+    val borderWidth = if (isSelected) 3.dp else 0.dp
     
-    val scale by animateFloatAsState(
-        targetValue = if (isSelected) 1.08f else 1f,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessMedium
-        ),
-        label = "scale"
-    )
+    val scale = if (isSelected) 1.08f else 1f
     
     val shape = RoundedCornerShape(cornerRadius)
     val interactionSource = remember { MutableInteractionSource() }

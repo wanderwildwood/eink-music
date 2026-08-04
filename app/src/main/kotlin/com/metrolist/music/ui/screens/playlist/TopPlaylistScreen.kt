@@ -269,7 +269,7 @@ fun TopPlaylistScreen(
                                 downloadState = downloadState,
                                 onShowRemoveDownloadDialog = { showRemoveDownloadDialog = true },
                                 menuState = menuState,
-                                modifier = Modifier.animateItem()
+                                modifier = Modifier
                             )
                         }
                     }
@@ -389,7 +389,7 @@ fun TopPlaylistScreen(
                                         }
                                     },
                                 )
-                                .animateItem()
+                                
                         )
                     }
                 }

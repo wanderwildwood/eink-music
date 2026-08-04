@@ -61,7 +61,7 @@ fun MoodAndGenresScreen(
         if (moodAndGenresList == null) {
             item(key = "mood_and_genres_shimmer") {
                 ShimmerHost(
-                    modifier = Modifier.animateItem()
+                    modifier = Modifier
                 ) {
                     repeat(8) {
                         ListItemPlaceHolder()
@@ -74,7 +74,7 @@ fun MoodAndGenresScreen(
             item(key = "mood_and_genres_section_$index") {
                 Column(
                     modifier = Modifier
-                        .animateItem()
+                        
                         .padding(horizontal = 6.dp),
                 ) {
                     NavigationTitle(

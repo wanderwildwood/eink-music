@@ -244,7 +244,7 @@ fun LocalSearchScreen(
                                                     )
                                                 }
                                             },
-                                        ).animateItem(),
+                                        ),
                             )
                         }
 
@@ -258,7 +258,7 @@ fun LocalSearchScreen(
                                         .clickable {
                                             onDismiss()
                                             navController.navigate("album/${item.id}")
-                                        }.animateItem(),
+                                        },
                             )
                         }
 
@@ -270,7 +270,7 @@ fun LocalSearchScreen(
                                         .clickable {
                                             onDismiss()
                                             navController.navigate("artist/${item.id}")
-                                        }.animateItem(),
+                                        },
                             )
                         }
 
@@ -282,7 +282,7 @@ fun LocalSearchScreen(
                                         .clickable {
                                             onDismiss()
                                             navController.navigate("local_playlist/${item.id}")
-                                        }.animateItem(),
+                                        },
                             )
                         }
                     }

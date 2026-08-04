@@ -66,11 +66,7 @@ fun WavySlider(
     
     val displayValue = if (isDragging) dragValue else normalizedValue
     
-    val animatedAmplitude by animateFloatAsState(
-        targetValue = if (isPlaying) 1f else 0f,
-        animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec,
-        label = "amplitude"
-    )
+    val animatedAmplitude = if (isPlaying) 1f else 0f
     
     val activeColor = colors.activeTrackColor
     val inactiveColor = colors.inactiveTrackColor

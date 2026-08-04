@@ -249,7 +249,7 @@ fun DiscordSettings(
             ),
         )
 
-        AnimatedVisibility(visible = !infoDismissed) {
+        if (!infoDismissed) {
             Card(
                 colors =
                     CardDefaults.cardColors(
@@ -548,11 +548,7 @@ fun DiscordSettings(
                 ),
         )
 
-        AnimatedVisibility(
-            visible = advancedMode && isLoggedIn,
-            enter = expandVertically(),
-            exit = shrinkVertically(),
-        ) {
+        if (advancedMode && isLoggedIn) {
             Column {
                 Spacer(Modifier.height(8.dp))
 

@@ -453,7 +453,7 @@ fun LibrarySongsScreen(
                     key = "empty_search_result",
                     contentType = CONTENT_TYPE_HEADER,
                 ) {
-                    LibrarySearchEmptyPlaceholder(modifier = Modifier.animateItem())
+                    LibrarySearchEmptyPlaceholder(modifier = Modifier)
                 }
             }
 
@@ -501,7 +501,7 @@ fun LibrarySongsScreen(
                                         ),
                                     )
                                 }
-                            }.animateItem(),
+                            },
                 )
             }
         }

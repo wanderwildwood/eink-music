@@ -256,7 +256,7 @@ fun OnlinePlaylistScreen(
                                 coroutineScope = coroutineScope,
                                 continuation = viewModel.continuation,
                                 isPodcastPlaylist = isPodcastPlaylist,
-                                modifier = Modifier.animateItem(),
+                                modifier = Modifier,
                             )
                         }
                     }
@@ -322,7 +322,7 @@ fun OnlinePlaylistScreen(
                                                 }
                                             }
                                         },
-                                    ).animateItem(),
+                                    ),
                             trailingContent = {
                                 if (inSelectMode) {
                                     Checkbox(

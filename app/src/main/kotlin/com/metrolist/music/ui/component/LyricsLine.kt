@@ -209,7 +209,7 @@ internal fun LyricsLine(
                     }
                 } else inactiveAlpha
                 
-                val animatedAlpha by animateFloatAsState(targetAlpha, tween(250), label = "lyricsLineAlpha")
+                val animatedAlpha = targetAlpha
                 val lineColor = expressiveAccent.copy(alpha = if (item.isBackground) focusedAlpha else animatedAlpha)
                 
                 val romanizedTextState by item.romanizedTextFlow.collectAsStateWithLifecycle()
@@ -304,11 +304,7 @@ internal fun LyricsLine(
         }
 
         if (item.isBackground) {
-            AnimatedVisibility(
-                visible = bgVisible,
-                enter = fadeIn(tween(durationMillis = 250, delayMillis = 100)),
-                exit = fadeOut(tween(250))
-            ) {
+            if (bgVisible) {
                 LyricContent()
             }
         } else {

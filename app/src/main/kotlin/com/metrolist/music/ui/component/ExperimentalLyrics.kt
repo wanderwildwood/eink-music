@@ -714,14 +714,7 @@ fun ExperimentalLyrics(
                 
                 if (isLyricsProviderShown) {
                     val targetProviderBase = anchorY + (positions[0] ?: 0f) - with(density) { 32.dp.toPx() }
-                    val animatedProviderBase by animateFloatAsState(
-                        targetValue = targetProviderBase,
-                        animationSpec = if (isInitialLayout || !isAutoScrollEnabled) snap()
-                        else {
-                            tween(750, 0, FastOutSlowInEasing)
-                        },
-                        label = "lyricsProviderOffset"
-                    )
+                    val animatedProviderBase = targetProviderBase
                     Text(
                         text = stringResource(R.string.lyrics_from_provider, lyricsEntity.provider),
                         fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
@@ -737,14 +730,7 @@ fun ExperimentalLyrics(
                         LaunchedEffect(isAutoScrollEnabled, targetOffset, isInitialLayout) {
                             if (isAutoScrollEnabled || isInitialLayout) frozenOffset.floatValue = targetOffset
                         }
-                        val animatedOffset by animateFloatAsState(
-                            targetValue = if (isAutoScrollEnabled) targetOffset else frozenOffset.floatValue,
-                            animationSpec = if (isInitialLayout || !isAutoScrollEnabled) snap() 
-                                            else {
-                                                tween(750, (distance * LYRICS_STAGGER_DELAY_PER_DISTANCE).coerceAtMost(LYRICS_STAGGER_DELAY_MAX_MS), FastOutSlowInEasing)
-                                            },
-                            label = "lyricStaggeredOffset_$listIndex"
-                        )
+                        val animatedOffset = if (isAutoScrollEnabled) targetOffset else frozenOffset.floatValue
 
                         Box(
                             modifier = Modifier.fillMaxWidth().layout { m, c -> 
@@ -838,6 +824,7 @@ fun ExperimentalLyrics(
 
     if (showProgressDialog) {
         BasicAlertDialog(onDismissRequest = {}) {
+            DisableDialogWindowAnimation()
             Card(shape = MaterialTheme.shapes.medium, colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)) {
                 Box(Modifier.padding(32.dp)) { Text(stringResource(R.string.generating_image) + "\n" + stringResource(R.string.please_wait)) }
             }

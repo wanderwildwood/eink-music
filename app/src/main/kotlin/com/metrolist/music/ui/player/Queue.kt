@@ -7,15 +7,7 @@ package com.metrolist.music.ui.player
 
 import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
@@ -481,10 +473,8 @@ fun Queue(
                                 tint = TextBackgroundColor,
                             )
                             Spacer(modifier = Modifier.width(6.dp))
-                            AnimatedContent(
-                                label = "sleepTimer",
-                                targetState = sleepTimerEnabled,
-                            ) { enabled ->
+                            run {
+                                val enabled = sleepTimerEnabled
                                 if (enabled) {
                                     Text(
                                         text = makeTimeString(sleepTimerTimeLeft),
@@ -831,7 +821,7 @@ fun Queue(
                         val content: @Composable () -> Unit = {
                             Row(
                                 horizontalArrangement = Arrangement.Center,
-                                modifier = Modifier.animateItem(),
+                                modifier = Modifier,
                             ) {
                                 MediaMetadataListItem(
                                     mediaMetadata = window.mediaItem.metadata!!,
@@ -949,7 +939,7 @@ fun Queue(
                             modifier =
                                 Modifier
                                     .padding(vertical = 8.dp, horizontal = 4.dp)
-                                    .animateItem(),
+                                    ,
                         )
 
                         Text(
@@ -1018,7 +1008,7 @@ fun Queue(
                                                     )
                                                 }
                                             },
-                                        ).animateItem(),
+                                        ),
                             )
                         }
                     }
@@ -1062,11 +1052,7 @@ fun Queue(
                     modifier = Modifier.weight(1f),
                 )
 
-                AnimatedVisibility(
-                    visible = !inSelectMode,
-                    enter = fadeIn() + slideInVertically { it },
-                    exit = fadeOut() + slideOutVertically { it },
-                ) {
+                if (!inSelectMode) {
                     Row {
                         IconButton(
                             onClick = { locked = !locked },
@@ -1101,11 +1087,7 @@ fun Queue(
                 }
             }
 
-            AnimatedVisibility(
-                visible = inSelectMode,
-                enter = fadeIn() + expandVertically(),
-                exit = fadeOut() + shrinkVertically(),
-            ) {
+            if (inSelectMode) {
                 val selectedSongs =
                     remember(selection.toList(), mutableQueueWindows) {
                         mutableQueueWindows

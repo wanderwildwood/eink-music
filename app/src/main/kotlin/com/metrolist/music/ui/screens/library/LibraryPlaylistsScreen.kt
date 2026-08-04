@@ -428,10 +428,10 @@ fun LibraryPlaylistsScreen(
                     if (visibleResults.isEmpty()) {
                         item(key = "empty_placeholder") {
                             if (searchQuery.isNotBlank()) {
-                                LibrarySearchEmptyPlaceholder(modifier = Modifier.animateItem())
+                                LibrarySearchEmptyPlaceholder(modifier = Modifier)
                             } else {
                                 LibrarySearchEmptyPlaceholder(
-                                    modifier = Modifier.animateItem(),
+                                    modifier = Modifier,
                                     icon = R.drawable.playlist_play,
                                     text = stringResource(R.string.library_playlist_empty),
                                 )
@@ -454,14 +454,14 @@ fun LibraryPlaylistsScreen(
                                         .clickable {
                                             item.route?.let(navController::navigate)
                                         }
-                                        .animateItem(),
+                                        ,
                             )
                         } else {
                             LibraryPlaylistListItem(
                                 menuState = menuState,
                                 coroutineScope = coroutineScope,
                                 playlist = item.playlist,
-                                modifier = Modifier.animateItem(),
+                                modifier = Modifier,
                             )
                         }
                     }
@@ -496,10 +496,10 @@ fun LibraryPlaylistsScreen(
                     if (visibleResults.isEmpty()) {
                         item(span = { GridItemSpan(maxLineSpan) }) {
                             if (searchQuery.isNotBlank()) {
-                                LibrarySearchEmptyPlaceholder(modifier = Modifier.animateItem())
+                                LibrarySearchEmptyPlaceholder(modifier = Modifier)
                             } else {
                                 LibrarySearchEmptyPlaceholder(
-                                    modifier = Modifier.animateItem(),
+                                    modifier = Modifier,
                                     icon = R.drawable.playlist_play,
                                     text = stringResource(R.string.library_playlist_empty),
                                 )
@@ -525,14 +525,14 @@ fun LibraryPlaylistsScreen(
                                                 item.route?.let(navController::navigate)
                                             },
                                         )
-                                        .animateItem(),
+                                        ,
                             )
                         } else {
                             LibraryPlaylistGridItem(
                                 menuState = menuState,
                                 coroutineScope = coroutineScope,
                                 playlist = item.playlist,
-                                modifier = Modifier.animateItem(),
+                                modifier = Modifier,
                             )
                         }
                     }

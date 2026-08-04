@@ -32,17 +32,9 @@ fun RandomizeGridItem(
 ) {
     // When isLoading is true, multiplier goes to 0 (moving dots to center)
     // When isLoading is false, multiplier goes to 1 (moving dots to corners)
-    val dotOffsetMultiplier by animateFloatAsState(
-        targetValue = if (isLoading) 0f else 1f,
-        animationSpec = tween(durationMillis = 600),
-        label = "dotOffset",
-    )
+    val dotOffsetMultiplier = if (isLoading) 0f else 1f
 
-    val loadingAlpha by animateFloatAsState(
-        targetValue = if (isLoading) 1f else 0f,
-        animationSpec = tween(durationMillis = 400),
-        label = "loadingAlpha",
-    )
+    val loadingAlpha = if (isLoading) 1f else 0f
 
     Box(
         modifier =

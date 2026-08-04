@@ -1025,25 +1025,16 @@ fun HomeScreen(
             val list = mutableListOf<HomeSection>()
             val chipActive = selectedChip != null
 
+            // eInk Music: mindful/no-suggestions philosophy — only local/personal sections
+            // (your own listening history, your own playlists) render on Home. The
+            // YouTube-algorithmic sections (community playlists, daily discover, similar-to
+            // recommendations, YT Music's own home feed, mood-and-genres browse) are never
+            // added to the list, so their (still-present) rendering code below just never runs.
             if (!chipActive && speedDialItems.isNotEmpty()) list.add(HomeSection.SpeedDial)
             if (!chipActive && quickPicks?.isNotEmpty() == true) list.add(HomeSection.QuickPicks)
-            if (!chipActive && communityPlaylists?.isNotEmpty() == true) list.add(HomeSection.FromTheCommunity)
-            if (!chipActive && dailyDiscover?.isNotEmpty() == true) list.add(HomeSection.DailyDiscover)
             if (!chipActive && keepListening?.isNotEmpty() == true) list.add(HomeSection.KeepListening)
             if (!chipActive && accountPlaylists?.isNotEmpty() == true) list.add(HomeSection.AccountPlaylists)
             if (!chipActive && forgottenFavorites?.isNotEmpty() == true) list.add(HomeSection.ForgottenFavorites)
-
-            if (!chipActive) {
-                similarRecommendations?.indices?.forEach { i ->
-                    list.add(HomeSection.SimilarRecommendation(i))
-                }
-            }
-
-            homePage?.sections?.indices?.forEach { i ->
-                list.add(HomeSection.HomePageSection(i))
-            }
-
-            if (explorePage?.moodAndGenres != null) list.add(HomeSection.MoodAndGenres)
 
             if (randomizeHomeOrder) {
                 list.sortedByDescending { section ->
@@ -1366,7 +1357,7 @@ fun HomeScreen(
 
                 if (selectedChip == null) {
                     item(key = "wrapped_card") {
-                        AnimatedVisibility(visible = shouldShowWrappedCard) {
+                        if (shouldShowWrappedCard) {
                             Card(
                                 modifier =
                                     Modifier

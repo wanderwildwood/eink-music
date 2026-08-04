@@ -57,20 +57,20 @@ fun ChangelogScreen(
         }
     }
 
-    val sheetState = rememberModalBottomSheetState(
+    val sheetState = com.mudita.mmd.components.bottom_sheet.rememberModalBottomSheetMMDState(
         skipPartiallyExpanded = false
     )
 
     val showFab by remember {
-        derivedStateOf { sheetState.targetValue != SheetValue.Hidden }
+        derivedStateOf { sheetState.targetValue != com.mudita.mmd.components.bottom_sheet.SheetValueMMD.Hidden }
     }
 
-    ModalBottomSheet(
+    com.mudita.mmd.components.bottom_sheet.ModalBottomSheetMMD(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
         containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
         shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
-        dragHandle = { BottomSheetDefaults.DragHandle() }
+        dragHandle = { com.mudita.mmd.components.bottom_sheet.BottomSheetDefaultsMMD.DragHandle() }
     ) {
         Box(modifier = Modifier.fillMaxWidth()) {
             LazyColumn(
@@ -127,21 +127,17 @@ fun ChangelogScreen(
                 }
             }
 
-            androidx.compose.animation.AnimatedVisibility(
-                visible = showFab,
-                enter = fadeIn() + slideInVertically { it },
-                exit = fadeOut() + slideOutVertically { it },
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(16.dp)
-            ) {
+            if (showFab) {
                 val githubReleasesUrl = stringResource(R.string.github_releases_url)
                 ExtendedFloatingActionButton(
                     onClick = { uriHandler.openUri(githubReleasesUrl) },
                     icon = { Icon(painterResource(R.drawable.github), contentDescription = null, modifier = Modifier.size(24.dp)) },
                     text = { Text(stringResource(R.string.view_on_github)) },
                     containerColor = MaterialTheme.colorScheme.onPrimary,
-                    contentColor = MaterialTheme.colorScheme.primary
+                    contentColor = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(16.dp)
                 )
             }
         }

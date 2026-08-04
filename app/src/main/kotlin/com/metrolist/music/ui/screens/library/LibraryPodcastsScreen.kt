@@ -267,7 +267,7 @@ fun LibraryPodcastsScreen(
                             modifier =
                                 Modifier
                                     .fillMaxWidth()
-                                    .animateItem(),
+                                    ,
                         )
                     }
                 }
@@ -317,7 +317,7 @@ fun LibraryPodcastsScreen(
                                     .fillMaxWidth()
                                     .clickable {
                                         navController.navigate("artist/${channel.id}")
-                                    }.animateItem(),
+                                    },
                         )
                     }
 
@@ -440,7 +440,7 @@ fun LibraryPodcastsScreen(
                                                 ),
                                             )
                                         }
-                                    }.animateItem(),
+                                    },
                         )
                     }
 

@@ -16,7 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.AlertDialog
+import com.metrolist.music.ui.component.NoAnimationAlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -134,7 +134,7 @@ fun EqScreen(
 
     // Error dialog
     if (showError != null) {
-        AlertDialog(
+        NoAnimationAlertDialog(
             onDismissRequest = { showError = null },
             title = {
                 Text(stringResource(R.string.import_error_title))
@@ -152,7 +152,7 @@ fun EqScreen(
 
     // Error dialog for apply failure
     if (state.error != null) {
-        AlertDialog(
+        NoAnimationAlertDialog(
             onDismissRequest = { viewModel.clearError() },
             title = {
                 Text(stringResource(R.string.error_title))
@@ -381,7 +381,7 @@ private fun EQProfileItem(
 
     // Delete confirmation dialog
     if (showDeleteDialog) {
-        AlertDialog(
+        NoAnimationAlertDialog(
             onDismissRequest = { showDeleteDialog = false },
             title = { Text(stringResource(R.string.delete_profile_desc)) },
             text = {

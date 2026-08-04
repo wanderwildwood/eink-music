@@ -159,14 +159,7 @@ fun AddToPlaylistDialogOnline(
             item {
                 val interactionSource = remember { MutableInteractionSource() }
                 val isPressed by interactionSource.collectIsPressedAsState()
-                val scale by animateFloatAsState(
-                    targetValue = if (isPressed) 0.94f else 1f,
-                    animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioMediumBouncy,
-                        stiffness = Spring.StiffnessMedium
-                    ),
-                    label = "buttonScale"
-                )
+                val scale = if (isPressed) 0.94f else 1f
                 FilledTonalButton(
                     onClick = { showCreatePlaylistDialog = true },
                     shape = RoundedCornerShape(50),
@@ -239,18 +232,10 @@ fun AddToPlaylistDialogOnline(
                                 )
                             }
                         }
-                        val arrowBg by animateColorAsState(
-                            targetValue = if (sortDescending) MaterialTheme.colorScheme.tertiaryContainer
-                            else MaterialTheme.colorScheme.surfaceVariant,
-                            animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
-                            label = "arrowBg"
-                        )
-                        val arrowFg by animateColorAsState(
-                            targetValue = if (sortDescending) MaterialTheme.colorScheme.onTertiaryContainer
-                            else MaterialTheme.colorScheme.onSurfaceVariant,
-                            animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
-                            label = "arrowFg"
-                        )
+                        val arrowBg = if (sortDescending) MaterialTheme.colorScheme.tertiaryContainer
+                            else MaterialTheme.colorScheme.surfaceVariant
+                        val arrowFg = if (sortDescending) MaterialTheme.colorScheme.onTertiaryContainer
+                            else MaterialTheme.colorScheme.onSurfaceVariant
                         IconToggleButton(
                             checked = sortDescending,
                             onCheckedChange = { onSortDescendingChange(it) },
@@ -276,13 +261,9 @@ fun AddToPlaylistDialogOnline(
 
             items(playlists) { playlist ->
                 val containsSong = playlist.id in playlistsContainingSong
-                val rowBg by animateColorAsState(
-                    targetValue = if (containsSong)
+                val rowBg = if (containsSong)
                         MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.45f)
-                    else Color.Transparent,
-                    animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
-                    label = "playlistBg"
-                )
+                    else Color.Transparent
                 PlaylistListItem(
                     playlist = playlist,
                     modifier = Modifier

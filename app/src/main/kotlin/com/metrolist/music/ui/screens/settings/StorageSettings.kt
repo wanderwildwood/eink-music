@@ -16,7 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
+import com.metrolist.music.ui.component.NoAnimationAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
@@ -116,22 +116,16 @@ fun StorageSettings(
     var downloadCacheSize by remember {
         mutableLongStateOf(tryOrNull { downloadCache.cacheSpace } ?: 0)
     }
-    val imageCacheProgress by animateFloatAsState(
-        targetValue =
+    val imageCacheProgress =
             (imageCacheSize.toFloat() / (maxImageCacheSize * 1024 * 1024L)).coerceIn(
                 0f,
                 1f,
-            ),
-        label = "imageCacheProgress",
-    )
-    val playerCacheProgress by animateFloatAsState(
-        targetValue =
+            )
+    val playerCacheProgress =
             (playerCacheSize.toFloat() / (maxSongCacheSize * 1024 * 1024L)).coerceIn(
                 0f,
                 1f,
-            ),
-        label = "playerCacheProgress",
-    )
+            )
 
     LaunchedEffect(maxImageCacheSize) {
         SingletonImageLoader.reset()
@@ -247,7 +241,7 @@ fun StorageSettings(
 
     // Confirmation Dialog
     if (showCacheWarningDialog) {
-        AlertDialog(
+        NoAnimationAlertDialog(
             onDismissRequest = { showCacheWarningDialog = false },
             title = { Text(stringResource(R.string.cache_size_warning_title)) },
             text = {

@@ -6,27 +6,56 @@
 package com.metrolist.music.ui.theme
 
 import android.graphics.Bitmap
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
+import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.SaverScope
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.sp
 import androidx.palette.graphics.Palette
-import com.materialkolor.PaletteStyle
-import com.materialkolor.dynamiccolor.ColorSpec
-import com.materialkolor.rememberDynamicColorScheme
 import com.materialkolor.score.Score
+import com.mudita.mmd.ThemeMMD
+import com.mudita.mmd.eInkColorScheme
+import com.mudita.mmd.eInkTypography
 
 val DefaultThemeColor = Color(0xFFED5564)
+
+/**
+ * eInk Music is monochrome-only (MMD design language) — dark/pureBlack/themeColor
+ * params are kept for call-site compatibility (theme preview screens, saved prefs)
+ * but no longer change the rendered palette.
+ */
+val EInkMusicColorScheme: ColorScheme = eInkColorScheme.copy(
+    surfaceBright = eInkColorScheme.background,
+    surfaceDim = eInkColorScheme.background,
+    surfaceContainer = eInkColorScheme.background,
+    surfaceContainerHigh = eInkColorScheme.background,
+    surfaceContainerHighest = eInkColorScheme.background,
+    surfaceContainerLowest = eInkColorScheme.background,
+)
+
+/**
+ * MMD's eInkTypography leaves `lineHeight` Unspecified on every style it customizes.
+ * Several stock screens do `.lineHeight.toDp()` arithmetic (e.g. grid-height calculations),
+ * which throws "Only Sp can convert to Px" on an Unspecified TextUnit. Patched once here,
+ * same fix shape as the Unspecified color-role crash in the audiobook player.
+ */
+val EInkMusicTypography: Typography = eInkTypography.copy(
+    headlineLarge = eInkTypography.headlineLarge.copy(lineHeight = 34.sp),
+    titleLarge = eInkTypography.titleLarge.copy(lineHeight = 30.sp),
+    titleMedium = eInkTypography.titleMedium.copy(lineHeight = 26.sp),
+    titleSmall = eInkTypography.titleSmall.copy(lineHeight = 22.sp),
+    bodyLarge = eInkTypography.bodyLarge.copy(lineHeight = 26.sp),
+    bodyMedium = eInkTypography.bodyMedium.copy(lineHeight = 24.sp),
+    bodySmall = eInkTypography.bodySmall.copy(lineHeight = 20.sp),
+    labelLarge = eInkTypography.labelLarge.copy(lineHeight = 24.sp),
+    labelMedium = eInkTypography.labelMedium.copy(lineHeight = 20.sp),
+    labelSmall = eInkTypography.labelSmall.copy(lineHeight = 18.sp),
+)
 
 @Composable
 fun MetrolistTheme(
@@ -35,38 +64,10 @@ fun MetrolistTheme(
     themeColor: Color = DefaultThemeColor,
     content: @Composable () -> Unit,
 ) {
-    val context = LocalContext.current
-    // Determine if system dynamic colors should be used (Android S+ and default theme color)
-    val useSystemDynamicColor = (themeColor == DefaultThemeColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-
-    // Select the appropriate color scheme generation method
-    val baseColorScheme = if (useSystemDynamicColor) {
-        // Use standard Material 3 dynamic color functions for system wallpaper colors
-        if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-    } else {
-        // Use materialKolor only when a specific seed color is provided
-        rememberDynamicColorScheme(
-            seedColor = themeColor, // themeColor is guaranteed non-default here
-            isDark = darkTheme,
-            specVersion = ColorSpec.SpecVersion.SPEC_2025,
-            style = PaletteStyle.TonalSpot // Keep existing style
-        )
-    }
-
-    // Apply pureBlack modification if needed, similar to original logic
-    val colorScheme = remember(baseColorScheme, pureBlack, darkTheme) {
-        if (darkTheme && pureBlack) {
-            baseColorScheme.pureBlack(true)
-        } else {
-            baseColorScheme
-        }
-    }
-
-    // Use standard MaterialTheme instead of MaterialExpressiveTheme
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = AppTypography, // Use the defined AppTypography
-        content = content
+    ThemeMMD(
+        colorScheme = EInkMusicColorScheme,
+        typography = EInkMusicTypography,
+        content = content,
     )
 }
 

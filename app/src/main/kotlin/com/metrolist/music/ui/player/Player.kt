@@ -14,7 +14,6 @@ import android.content.res.Configuration
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearEasing
@@ -56,7 +55,7 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AlertDialog
+import com.metrolist.music.ui.component.NoAnimationAlertDialog
 import androidx.compose.material3.ContainedLoadingIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -455,25 +454,19 @@ fun BottomSheetPlayer(
         }
     }
 
-    val TextBackgroundColor by animateColorAsState(
-        targetValue =
-            when (playerBackground) {
-                PlayerBackgroundStyle.DEFAULT -> MaterialTheme.colorScheme.onBackground
-                PlayerBackgroundStyle.BLUR -> Color.White
-                PlayerBackgroundStyle.GRADIENT -> Color.White
-            },
-        label = "TextBackgroundColor",
-    )
+    val TextBackgroundColor =
+        when (playerBackground) {
+            PlayerBackgroundStyle.DEFAULT -> MaterialTheme.colorScheme.onBackground
+            PlayerBackgroundStyle.BLUR -> Color.White
+            PlayerBackgroundStyle.GRADIENT -> Color.White
+        }
 
-    val icBackgroundColor by animateColorAsState(
-        targetValue =
-            when (playerBackground) {
-                PlayerBackgroundStyle.DEFAULT -> MaterialTheme.colorScheme.surface
-                PlayerBackgroundStyle.BLUR -> Color.Black
-                PlayerBackgroundStyle.GRADIENT -> Color.Black
-            },
-        label = "icBackgroundColor",
-    )
+    val icBackgroundColor =
+        when (playerBackground) {
+            PlayerBackgroundStyle.DEFAULT -> MaterialTheme.colorScheme.surface
+            PlayerBackgroundStyle.BLUR -> Color.Black
+            PlayerBackgroundStyle.GRADIENT -> Color.Black
+        }
 
     val (textButtonColor, iconButtonColor) =
         when {
@@ -628,7 +621,7 @@ fun BottomSheetPlayer(
 
 
     if (showSleepTimerDialog) {
-        AlertDialog(
+        NoAnimationAlertDialog(
             properties = DialogProperties(usePlatformDefaultWidth = false),
             onDismissRequest = { showSleepTimerDialog = false },
             icon = {
@@ -841,13 +834,8 @@ fun BottomSheetPlayer(
             ) {
                 when (playerBackground) {
                     PlayerBackgroundStyle.BLUR -> {
-                        AnimatedContent(
-                            targetState = mediaMetadata?.thumbnailUrl,
-                            transitionSpec = {
-                                fadeIn(tween(800)).togetherWith(fadeOut(tween(800)))
-                            },
-                            label = "blurBackground",
-                        ) { thumbnailUrl ->
+                        run {
+                            val thumbnailUrl = mediaMetadata?.thumbnailUrl
                             if (thumbnailUrl != null) {
                                 Box(modifier = Modifier.alpha(backgroundAlpha)) {
                                     AsyncImage(
@@ -877,13 +865,8 @@ fun BottomSheetPlayer(
                     }
 
                     PlayerBackgroundStyle.GRADIENT -> {
-                        AnimatedContent(
-                            targetState = gradientColors,
-                            transitionSpec = {
-                                fadeIn(tween(800)).togetherWith(fadeOut(tween(800)))
-                            },
-                            label = "gradientBackground",
-                        ) { colors ->
+                        run {
+                            val colors = gradientColors
                             if (colors.isNotEmpty()) {
                                 val gradientColorStops =
                                     if (colors.size >= 3) {
@@ -935,11 +918,7 @@ fun BottomSheetPlayer(
         },
     ) {
         val controlsContent: @Composable ColumnScope.(MediaMetadata) -> Unit = { mediaMetadata ->
-            val playPauseRoundness by animateDpAsState(
-                targetValue = if (isPlaying) 24.dp else 36.dp,
-                animationSpec = tween(durationMillis = 90, easing = LinearEasing),
-                label = "playPauseRoundness",
-            )
+            val playPauseRoundness = if (isPlaying) 24.dp else 36.dp
 
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -949,10 +928,8 @@ fun BottomSheetPlayer(
                         .fillMaxWidth()
                         .padding(horizontal = PlayerHorizontalPadding),
             ) {
-                AnimatedContent(
-                    targetState = showInlineLyrics,
-                    label = "ThumbnailAnimation",
-                ) { showLyrics ->
+                run {
+                    val showLyrics = showInlineLyrics
                     if (showLyrics) {
                         Row {
                             if (hidePlayerThumbnail) {
@@ -992,11 +969,8 @@ fun BottomSheetPlayer(
                 Column(
                     modifier = Modifier.weight(1f),
                 ) {
-                    AnimatedContent(
-                        targetState = mediaMetadata.title,
-                        transitionSpec = { fadeIn() togetherWith fadeOut() },
-                        label = "",
-                    ) { title ->
+                    run {
+                        val title = mediaMetadata.title
                         Text(
                             text = title,
                             style = MaterialTheme.typography.titleLarge,
@@ -1145,7 +1119,8 @@ fun BottomSheetPlayer(
                         horizontalArrangement = Arrangement.spacedBy(6.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        AnimatedContent(targetState = showInlineLyrics, label = "ShareButton") { showLyrics ->
+                        run {
+                            val showLyrics = showInlineLyrics
                             if (showLyrics) {
                                 FilledIconButton(
                                     onClick = { isFullScreen = !isFullScreen },
@@ -1194,7 +1169,8 @@ fun BottomSheetPlayer(
                             }
                         }
 
-                        AnimatedContent(targetState = showInlineLyrics, label = "LikeButton") { showLyrics ->
+                        run {
+                            val showLyrics = showInlineLyrics
                             if (showLyrics) {
                                 val currentLyrics by playerConnection.currentLyrics.collectAsStateWithLifecycle(initialValue = null)
                                 FilledIconButton(
@@ -1260,7 +1236,8 @@ fun BottomSheetPlayer(
                         }
                     }
                 } else {
-                    AnimatedContent(targetState = showInlineLyrics, label = "ShareButton") { showLyrics ->
+                    run {
+                        val showLyrics = showInlineLyrics
                         if (showLyrics) {
                             Box(
                                 modifier =
@@ -1315,7 +1292,8 @@ fun BottomSheetPlayer(
 
                     Spacer(modifier = Modifier.size(12.dp))
 
-                    AnimatedContent(targetState = showInlineLyrics, label = "LikeButton") { showLyrics ->
+                    run {
+                        val showLyrics = showInlineLyrics
                         if (showLyrics) {
                             val currentLyrics by playerConnection.currentLyrics.collectAsStateWithLifecycle(initialValue = null)
                             Box(
@@ -1511,11 +1489,7 @@ fun BottomSheetPlayer(
 
             Spacer(Modifier.height(24.dp))
 
-            AnimatedVisibility(
-                visible = !isFullScreen,
-                enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
-                exit = shrinkVertically(shrinkTowards = Alignment.Top) + slideOutVertically(targetOffsetY = { it }) + fadeOut(),
-            ) {
+            if (!isFullScreen) {
                 Column {
                     if (useNewPlayerDesign) {
                         Row(
@@ -1534,56 +1508,32 @@ fun BottomSheetPlayer(
                             val isBackPressed by backInteractionSource.collectIsPressedAsState()
                             val isNextPressed by nextInteractionSource.collectIsPressedAsState()
 
-                            val playPauseWeight by animateFloatAsState(
-                                targetValue =
-                                    if (isPlayPausePressed) {
-                                        1.9f
-                                    } else if (isBackPressed || isNextPressed) {
-                                        1.1f
-                                    } else {
-                                        1.3f
-                                    },
-                                animationSpec =
-                                    spring(
-                                        dampingRatio = 0.6f,
-                                        stiffness = 500f,
-                                    ),
-                                label = "playPauseWeight",
-                            )
+                            val playPauseWeight =
+                                if (isPlayPausePressed) {
+                                    1.9f
+                                } else if (isBackPressed || isNextPressed) {
+                                    1.1f
+                                } else {
+                                    1.3f
+                                }
 
-                            val backButtonWeight by animateFloatAsState(
-                                targetValue =
-                                    if (isBackPressed) {
-                                        0.65f
-                                    } else if (isPlayPausePressed) {
-                                        0.35f
-                                    } else {
-                                        0.45f
-                                    },
-                                animationSpec =
-                                    spring(
-                                        dampingRatio = 0.6f,
-                                        stiffness = 500f,
-                                    ),
-                                label = "backButtonWeight",
-                            )
+                            val backButtonWeight =
+                                if (isBackPressed) {
+                                    0.65f
+                                } else if (isPlayPausePressed) {
+                                    0.35f
+                                } else {
+                                    0.45f
+                                }
 
-                            val nextButtonWeight by animateFloatAsState(
-                                targetValue =
-                                    if (isNextPressed) {
-                                        0.65f
-                                    } else if (isPlayPausePressed) {
-                                        0.35f
-                                    } else {
-                                        0.45f
-                                    },
-                                animationSpec =
-                                    spring(
-                                        dampingRatio = 0.6f,
-                                        stiffness = 500f,
-                                    ),
-                                label = "nextButtonWeight",
-                            )
+                            val nextButtonWeight =
+                                if (isNextPressed) {
+                                    0.65f
+                                } else if (isPlayPausePressed) {
+                                    0.35f
+                                } else {
+                                    0.45f
+                                }
 
                             FilledIconButton(
                                 onClick = playerConnection::seekToPrevious,
@@ -1865,11 +1815,8 @@ fun BottomSheetPlayer(
                         val currentSliderPosition by rememberUpdatedState(sliderPosition)
                         val sliderPositionProvider = remember { { currentSliderPosition } }
                         val isExpandedProvider = remember(state) { { state.isExpanded } }
-                        AnimatedContent(
-                            targetState = showInlineLyrics,
-                            label = "Lyrics",
-                            transitionSpec = { fadeIn() togetherWith fadeOut() },
-                        ) { showLyrics ->
+                        run {
+                            val showLyrics = showInlineLyrics
                             if (showLyrics) {
                                 InlineLyricsView(
                                     mediaMetadata = mediaMetadata,
@@ -1908,10 +1855,7 @@ fun BottomSheetPlayer(
             }
 
             else -> {
-                val bottomPadding by animateDpAsState(
-                    targetValue = if (isFullScreen) 0.dp else queueSheetState.collapsedBound,
-                    label = "bottomPadding",
-                )
+                val bottomPadding = if (isFullScreen) 0.dp else queueSheetState.collapsedBound
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier =
@@ -1928,11 +1872,8 @@ fun BottomSheetPlayer(
                         val currentSliderPosition by rememberUpdatedState(sliderPosition)
                         val sliderPositionProvider = remember { { currentSliderPosition } }
                         val isExpandedProvider = remember(state) { { state.isExpanded } }
-                        AnimatedContent(
-                            targetState = showInlineLyrics,
-                            label = "Lyrics",
-                            transitionSpec = { fadeIn() togetherWith fadeOut() },
-                        ) { showLyrics ->
+                        run {
+                            val showLyrics = showInlineLyrics
                             if (showLyrics) {
                                 InlineLyricsView(
                                     mediaMetadata = mediaMetadata,
@@ -1959,11 +1900,7 @@ fun BottomSheetPlayer(
             }
         }
 
-        AnimatedVisibility(
-            visible = !isFullScreen,
-            enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
-            exit = shrinkVertically(shrinkTowards = Alignment.Top) + slideOutVertically(targetOffsetY = { it }) + fadeOut(),
-        ) {
+        if (!isFullScreen) {
             Queue(
                 state = queueSheetState,
                 playerBottomSheetState = state,

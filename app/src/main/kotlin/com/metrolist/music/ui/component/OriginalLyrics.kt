@@ -990,19 +990,13 @@ fun OriginalLyrics(
                         val isActiveByIndex = index == displayedCurrentLineIndex
                         val isActiveByTime = isLineAtSameTime && displayedCurrentLineIndex >= 0
 
-                        val alpha by animateFloatAsState(
-                            targetValue =
+                        val alpha =
                                 when {
                                     !isSynced || (isSelectionModeActive && isSelected) -> 1f
                                     isActiveByIndex || isActiveByTime -> 1f
                                     else -> 0.5f
-                                },
-                            animationSpec = tween(durationMillis = 400),
-                        )
-                        val scale by animateFloatAsState(
-                            targetValue = if (isActiveByIndex || isActiveByTime) 1.05f else 1f,
-                            animationSpec = tween(durationMillis = 400),
-                        )
+                                }
+                        val scale = if (isActiveByIndex || isActiveByTime) 1.05f else 1f
 
                         // Determine alignment based on agent for multi-singer support
                         val agentAlignment =
@@ -1730,11 +1724,7 @@ fun OriginalLyrics(
                 .padding(bottom = 16.dp),
             contentAlignment = Alignment.BottomCenter,
         ) {
-            AnimatedVisibility(
-                visible = !isAutoScrollEnabled && isSynced && !isSelectionModeActive,
-                enter = slideInVertically { it } + fadeIn(),
-                exit = slideOutVertically { it } + fadeOut(),
-            ) {
+            if (!isAutoScrollEnabled && isSynced && !isSelectionModeActive) {
                 FilledTonalButton(onClick = latestResyncLyrics) {
                     Icon(
                         painter = painterResource(id = R.drawable.sync),
@@ -1746,11 +1736,7 @@ fun OriginalLyrics(
                 }
             }
 
-            AnimatedVisibility(
-                visible = isSelectionModeActive,
-                enter = slideInVertically { it } + fadeIn(),
-                exit = slideOutVertically { it } + fadeOut(),
-            ) {
+            if (isSelectionModeActive) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically,
@@ -1805,6 +1791,7 @@ fun OriginalLyrics(
 
         if (showProgressDialog) {
             BasicAlertDialog(onDismissRequest = { /* Don't dismiss */ }) {
+                DisableDialogWindowAnimation()
                 Card( // Use Card for better styling
                     shape = MaterialTheme.shapes.medium,
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -1823,6 +1810,7 @@ fun OriginalLyrics(
         if (showShareDialog && shareDialogData != null) {
             val (lyricsText, songTitle, artists) = shareDialogData!! // Renamed 'lyrics' to 'lyricsText' for clarity
             BasicAlertDialog(onDismissRequest = { showShareDialog = false }) {
+                DisableDialogWindowAnimation()
                 Card(
                     shape = MaterialTheme.shapes.medium,
                     elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
@@ -2007,6 +1995,7 @@ fun OriginalLyrics(
             }
 
             BasicAlertDialog(onDismissRequest = { showColorPickerDialog = false }) {
+                DisableDialogWindowAnimation()
                 Card(
                     shape = RoundedCornerShape(20.dp),
                     modifier =

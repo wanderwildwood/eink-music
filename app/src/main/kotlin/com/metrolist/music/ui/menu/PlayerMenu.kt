@@ -34,7 +34,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AlertDialog
+import com.metrolist.music.ui.component.NoAnimationAlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -777,7 +777,7 @@ fun TempoPitchDialog(onDismiss: () -> Unit) {
     val listenTogetherManager = com.metrolist.music.LocalListenTogetherManager.current
     val isInRoom = listenTogetherManager?.isInRoom ?: false
 
-    AlertDialog(
+    NoAnimationAlertDialog(
         properties = DialogProperties(usePlatformDefaultWidth = false),
         onDismissRequest = onDismiss,
         title = {
@@ -843,7 +843,7 @@ fun SpeedDialog(onDismiss: () -> Unit) {
     }
     val listenTogetherManager = com.metrolist.music.LocalListenTogetherManager.current
 
-    AlertDialog(
+    NoAnimationAlertDialog(
         properties = DialogProperties(usePlatformDefaultWidth = false),
         onDismissRequest = onDismiss,
         title = {

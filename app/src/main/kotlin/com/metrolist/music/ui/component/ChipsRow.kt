@@ -6,17 +6,6 @@
 package com.metrolist.music.ui.component
 
 import android.annotation.SuppressLint
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandIn
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -102,11 +91,6 @@ fun <Int> ChoiceChipsRow(
     containerColor: Color = MaterialTheme.colorScheme.surfaceContainer,
 ) {
     var expandIconDegree by remember { mutableFloatStateOf(0f) }
-    val rotationAnimation by animateFloatAsState(
-        targetValue = expandIconDegree,
-        animationSpec = tween(durationMillis = 400),
-        label = "",
-    )
 
     Row(
         modifier =
@@ -138,7 +122,7 @@ fun <Int> ChoiceChipsRow(
                     Icon(
                         painter = painterResource(R.drawable.expand_more),
                         contentDescription = null,
-                        modifier = Modifier.graphicsLayer(rotationZ = rotationAnimation),
+                        modifier = Modifier.graphicsLayer(rotationZ = expandIconDegree),
                     )
                 },
                 shape = RoundedCornerShape(16.dp),
@@ -149,59 +133,47 @@ fun <Int> ChoiceChipsRow(
                 )
             )
 
-            AnimatedVisibility(
-                visible = expanded,
-                enter = expandIn() + fadeIn(),
-                exit = shrinkOut() + fadeOut(),
+            DropdownMenu(
+                modifier = Modifier.padding(start = 12.dp),
+                expanded = expanded,
+                onDismissRequest = {
+                    expanded = false
+                    expandIconDegree -= 180
+                },
             ) {
-                DropdownMenu(
-                    modifier = Modifier.padding(start = 12.dp),
-                    expanded = expanded,
-                    onDismissRequest = {
-                        expanded = false
-                        expandIconDegree -= 180
-                    },
-                ) {
-                    options.forEach { option ->
-                        DropdownMenuItem(
-                            text = { Text(text = option.second) },
-                            onClick = {
-                                onSelectionChange(option.first)
-                                expandIconDegree -= 180
-                                expanded = false
-                            },
-                        )
-                    }
+                options.forEach { option ->
+                    DropdownMenuItem(
+                        text = { Text(text = option.second) },
+                        onClick = {
+                            onSelectionChange(option.first)
+                            expandIconDegree -= 180
+                            expanded = false
+                        },
+                    )
                 }
             }
         }
 
-        AnimatedContent(
-            targetState = selectedOption,
-            transitionSpec = { slideInHorizontally() + fadeIn() togetherWith slideOutHorizontally() + fadeOut() },
-            label = "",
+        Row(
+            modifier =
+            Modifier
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState())
+                .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Horizontal)),
         ) {
-            Row(
-                modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState())
-                    .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Horizontal)),
-            ) {
-                chips.forEach { (value, label) ->
-                    Spacer(Modifier.width(8.dp))
+            chips.forEach { (value, label) ->
+                Spacer(Modifier.width(8.dp))
 
-                    FilterChip(
-                        label = { Text(label) },
-                        selected = currentValue == value,
-                        colors = FilterChipDefaults.filterChipColors(
-                            containerColor = containerColor,
-                        ),
-                        onClick = { onValueUpdate(value) },
-                        shape = RoundedCornerShape(16.dp),
-                        border = null
-                    )
-                }
+                FilterChip(
+                    label = { Text(label) },
+                    selected = currentValue == value,
+                    colors = FilterChipDefaults.filterChipColors(
+                        containerColor = containerColor,
+                    ),
+                    onClick = { onValueUpdate(value) },
+                    shape = RoundedCornerShape(16.dp),
+                    border = null
+                )
             }
         }
     }

@@ -19,7 +19,7 @@ if (localPropertiesFile.exists()) {
     localProperties.load(localPropertiesFile.inputStream())
 }
 
-val baseApplicationId = "com.metrolist.music"
+val baseApplicationId = "com.wanderwildwood.einkmusic"
 val applicationIdOverride = System.getenv("METROLIST_APPLICATION_ID")?.takeIf { it.isNotBlank() }
 val appNameOverride = System.getenv("METROLIST_APP_NAME")?.takeIf { it.isNotBlank() }
 val debugKeystorePathOverride = System.getenv("METROLIST_DEBUG_KEYSTORE_PATH")?.takeIf { it.isNotBlank() }
@@ -99,11 +99,11 @@ android {
 
     defaultConfig {
         applicationId = applicationIdOverride ?: baseApplicationId
-        minSdk = 26
+        minSdk = 28
         targetSdk = 36
         versionCode = 150
         versionName = "13.6.1"
-        resValue("string", "app_name", appNameOverride ?: "Metrolist")
+        resValue("string", "app_name", appNameOverride ?: "eInk Music")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -191,7 +191,7 @@ android {
             }
             isDebuggable = true
             if (appNameOverride == null) {
-                resValue("string", "app_name", "Metrolist Debug")
+                resValue("string", "app_name", "eInk Music Debug")
             }
             signingConfig =
                 if (workflowDebugKeystoreFile != null) {
@@ -340,6 +340,8 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.hilt.navigation)
     implementation(libs.datastore)
+
+    implementation("com.mudita:MMD:1.0.2")
 
     implementation(libs.compose.runtime)
     implementation(libs.compose.foundation)

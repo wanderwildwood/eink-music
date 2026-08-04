@@ -360,13 +360,13 @@ fun ArtistItemsScreen(
                                         }
                                     }
                                 },
-                            ).animateItem(),
+                            ),
                 )
             }
 
             if (itemsPage?.continuation != null) {
                 item(key = "loading") {
-                    ShimmerHost(Modifier.animateItem()) {
+                    ShimmerHost(Modifier) {
                         GridItemPlaceHolder(fillMaxWidth = true)
                     }
                 }

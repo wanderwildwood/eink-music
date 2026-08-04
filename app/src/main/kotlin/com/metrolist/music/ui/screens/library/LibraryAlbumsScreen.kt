@@ -276,12 +276,12 @@ fun LibraryAlbumsScreen(
                         if (albums.isEmpty()) {
                             item(key = "empty_placeholder") {
                                 if (searchQuery.isNotBlank()) {
-                                    LibrarySearchEmptyPlaceholder(modifier = Modifier.animateItem())
+                                    LibrarySearchEmptyPlaceholder(modifier = Modifier)
                                 } else {
                                     EmptyPlaceholder(
                                         icon = R.drawable.album,
                                         text = stringResource(R.string.library_album_empty),
-                                        modifier = Modifier.animateItem(),
+                                        modifier = Modifier,
                                     )
                                 }
                             }
@@ -298,7 +298,7 @@ fun LibraryAlbumsScreen(
                                 isPlaying = isPlaying,
                                 modifier =
                                     Modifier
-                                        .animateItem(),
+                                        ,
                             )
                         }
                     }
@@ -334,12 +334,12 @@ fun LibraryAlbumsScreen(
                         if (albums.isEmpty()) {
                             item(span = { GridItemSpan(maxLineSpan) }) {
                                 if (searchQuery.isNotBlank()) {
-                                    LibrarySearchEmptyPlaceholder(modifier = Modifier.animateItem())
+                                    LibrarySearchEmptyPlaceholder(modifier = Modifier)
                                 } else {
                                     EmptyPlaceholder(
                                         icon = R.drawable.album,
                                         text = stringResource(R.string.library_album_empty),
-                                        modifier = Modifier.animateItem(),
+                                        modifier = Modifier,
                                     )
                                 }
                             }
@@ -357,7 +357,7 @@ fun LibraryAlbumsScreen(
                                 isPlaying = isPlaying,
                                 modifier =
                                     Modifier
-                                        .animateItem(),
+                                        ,
                             )
                         }
                     }

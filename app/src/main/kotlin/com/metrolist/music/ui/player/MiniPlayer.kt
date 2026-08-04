@@ -8,12 +8,9 @@
 package com.metrolist.music.ui.player
 
 import android.content.res.Configuration
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.border
@@ -684,7 +681,7 @@ private fun NewMiniPlayerSongInfo(
                 }
             }
 
-            AnimatedVisibility(visible = error != null, enter = fadeIn(), exit = fadeOut()) {
+            if (error != null) {
                 Text(
                     text = stringResource(R.string.error_playing),
                     color = errorColor,
@@ -998,7 +995,7 @@ private fun LegacyMiniMediaInfo(
                         .clip(RoundedCornerShape(ThumbnailCornerRadius)),
             )
 
-            androidx.compose.animation.AnimatedVisibility(visible = error != null, enter = fadeIn(), exit = fadeOut()) {
+            if (error != null) {
                 Box(
                     Modifier
                         .fillMaxSize()

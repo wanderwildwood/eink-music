@@ -400,14 +400,14 @@ fun StatsScreen(
                                 visibleStatsPlaylists.size,
                                 visibleStatsPlaylists.size,
                             ),
-                        modifier = Modifier.animateItem(),
+                        modifier = Modifier,
                     )
                 }
 
                 item(key = "mostPeriodPlaylists") {
                     LazyRow(
                         contentPadding = PaddingValues(horizontal = 4.dp),
-                        modifier = Modifier.animateItem(),
+                        modifier = Modifier,
                     ) {
                         itemsIndexed(
                             items = visibleStatsPlaylists,
@@ -422,7 +422,7 @@ fun StatsScreen(
                                             onClick = {
                                                 navController.navigate("local_playlist/${playlist.id}")
                                             },
-                                        ).animateItem(),
+                                        ),
                             )
                         }
                     }
@@ -446,11 +446,11 @@ fun StatsScreen(
                             } else {
                                 null
                             },
-                        modifier = Modifier.animateItem(),
+                        modifier = Modifier,
                     )
 
                     LazyRow(
-                        modifier = Modifier.animateItem(),
+                        modifier = Modifier,
                     ) {
                         itemsIndexed(
                             items = mostPlayedSongsStats,
@@ -501,7 +501,7 @@ fun StatsScreen(
                                                     }
                                                 }
                                             },
-                                        ).animateItem(),
+                                        ),
                             )
                         }
                     }
@@ -512,11 +512,11 @@ fun StatsScreen(
                 item(key = "mostPlayedArtists") {
                     NavigationTitle(
                         title = "${mostPlayedArtists.size} ${stringResource(id = R.string.artists)}",
-                        modifier = Modifier.animateItem(),
+                        modifier = Modifier,
                     )
 
                     LazyRow(
-                        modifier = Modifier.animateItem(),
+                        modifier = Modifier,
                     ) {
                         itemsIndexed(
                             items = mostPlayedArtists,
@@ -550,7 +550,7 @@ fun StatsScreen(
                                                     )
                                                 }
                                             },
-                                        ).animateItem(),
+                                        ),
                             )
                         }
                     }
@@ -561,12 +561,12 @@ fun StatsScreen(
                 item(key = "mostPlayedAlbums") {
                     NavigationTitle(
                         title = "${mostPlayedAlbums.size} ${stringResource(id = R.string.albums)}",
-                        modifier = Modifier.animateItem(),
+                        modifier = Modifier,
                     )
 
                     if (mostPlayedAlbums.isNotEmpty()) {
                         LazyRow(
-                            modifier = Modifier.animateItem(),
+                            modifier = Modifier,
                         ) {
                             itemsIndexed(
                                 items = mostPlayedAlbums,
@@ -602,7 +602,7 @@ fun StatsScreen(
                                                         )
                                                     }
                                                 },
-                                            ).animateItem(),
+                                            ),
                                 )
                             }
                         }

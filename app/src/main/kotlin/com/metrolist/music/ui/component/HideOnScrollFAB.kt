@@ -6,9 +6,6 @@
 package com.metrolist.music.ui.component
 
 import androidx.annotation.DrawableRes
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
@@ -43,21 +40,16 @@ fun BoxScope.HideOnScrollFAB(
     onClick: () -> Unit,
     onRecognitionClick: (() -> Unit)? = null,
 ) {
-    AnimatedVisibility(
-        visible = visible && lazyListState.isScrollingUp(),
-        enter = slideInVertically { it },
-        exit = slideOutVertically { it },
-        modifier =
-        Modifier
-            .align(Alignment.BottomEnd)
-            .windowInsetsPadding(
-                LocalPlayerAwareWindowInsets.current
-                    .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal),
-            ),
-    ) {
+    if (visible && lazyListState.isScrollingUp()) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .windowInsetsPadding(
+                    LocalPlayerAwareWindowInsets.current
+                        .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal),
+                )
+                .padding(16.dp)
         ) {
             if (onRecognitionClick != null) {
                 SmallFloatingActionButton(
@@ -94,21 +86,16 @@ fun BoxScope.HideOnScrollFAB(
     onClick: () -> Unit,
     onRecognitionClick: (() -> Unit)? = null,
 ) {
-    AnimatedVisibility(
-        visible = visible && lazyListState.isScrollingUp(),
-        enter = slideInVertically { it },
-        exit = slideOutVertically { it },
-        modifier =
-        Modifier
-            .align(Alignment.BottomEnd)
-            .windowInsetsPadding(
-                LocalPlayerAwareWindowInsets.current
-                    .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal),
-            ),
-    ) {
+    if (visible && lazyListState.isScrollingUp()) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .windowInsetsPadding(
+                    LocalPlayerAwareWindowInsets.current
+                        .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal),
+                )
+                .padding(16.dp)
         ) {
             if (onRecognitionClick != null) {
                 SmallFloatingActionButton(
@@ -145,21 +132,16 @@ fun BoxScope.HideOnScrollFAB(
     onClick: () -> Unit,
     onRecognitionClick: (() -> Unit)? = null,
 ) {
-    AnimatedVisibility(
-        visible = visible && scrollState.isScrollingUp(),
-        enter = slideInVertically { it },
-        exit = slideOutVertically { it },
-        modifier =
-        Modifier
-            .align(Alignment.BottomEnd)
-            .windowInsetsPadding(
-                LocalPlayerAwareWindowInsets.current
-                    .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal),
-            ),
-    ) {
+    if (visible && scrollState.isScrollingUp()) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .windowInsetsPadding(
+                    LocalPlayerAwareWindowInsets.current
+                        .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal),
+                )
+                .padding(16.dp)
         ) {
             if (onRecognitionClick != null) {
                 SmallFloatingActionButton(

@@ -356,7 +356,7 @@ fun OnlineSearchResult(
                             }
                         },
                         onLongClick = longClick,
-                    ).animateItem(),
+                    ),
         )
     }
 

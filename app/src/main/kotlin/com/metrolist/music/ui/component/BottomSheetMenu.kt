@@ -9,7 +9,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,12 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.ModalBottomSheetDefaults
-import androidx.compose.material3.ModalBottomSheetProperties
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.contentColorFor
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
@@ -35,10 +29,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.mudita.mmd.components.bottom_sheet.ModalBottomSheetDefaultsMMD
+import com.mudita.mmd.components.bottom_sheet.ModalBottomSheetMMD
+import com.mudita.mmd.components.bottom_sheet.ModalBottomSheetPropertiesMMD
+import com.mudita.mmd.components.bottom_sheet.SheetStateMMD
+import com.mudita.mmd.components.bottom_sheet.rememberModalBottomSheetMMDState
 
 val LocalMenuState = compositionLocalOf { MenuState() }
 
@@ -66,16 +63,11 @@ fun AnimatedBottomSheet(
     isVisible: Boolean,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
-    sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false),
-    sheetMaxWidth: Dp = BottomSheetDefaults.SheetMaxWidth,
-    shape: Shape = BottomSheetDefaults.ExpandedShape,
+    sheetState: SheetStateMMD = rememberModalBottomSheetMMDState(skipPartiallyExpanded = false),
     containerColor: Color = BottomSheetDefaults.ContainerColor,
     contentColor: Color = contentColorFor(containerColor),
-    tonalElevation: Dp = 0.dp,
-    scrimColor: Color = BottomSheetDefaults.ScrimColor,
-    dragHandle: @Composable (() -> Unit)? = { BottomSheetDefaults.DragHandle() },
-    contentWindowInsets: @Composable () -> WindowInsets = { BottomSheetDefaults.modalWindowInsets },
-    properties: ModalBottomSheetProperties = ModalBottomSheetDefaults.properties,
+    dragHandle: @Composable (() -> Unit)? = { com.mudita.mmd.components.bottom_sheet.BottomSheetDefaultsMMD.DragHandle() },
+    properties: ModalBottomSheetPropertiesMMD = ModalBottomSheetDefaultsMMD.properties,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     var lastContent by remember { mutableStateOf(content) }
@@ -98,18 +90,13 @@ fun AnimatedBottomSheet(
         return
     }
 
-    ModalBottomSheet(
+    ModalBottomSheetMMD(
         onDismissRequest = onDismissRequest,
         modifier = modifier,
         sheetState = sheetState,
-        sheetMaxWidth = sheetMaxWidth,
-        shape = shape,
         containerColor = containerColor,
         contentColor = contentColor,
-        tonalElevation = tonalElevation,
-        scrimColor = scrimColor,
         dragHandle = dragHandle,
-        contentWindowInsets = contentWindowInsets,
         properties = properties,
         content = lastContent,
     )
@@ -123,7 +110,7 @@ fun BottomSheetMenu(
     background: Color = MaterialTheme.colorScheme.surface,
 ) {
     val focusManager = LocalFocusManager.current
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
+    val sheetState = rememberModalBottomSheetMMDState(skipPartiallyExpanded = false)
 
     AnimatedBottomSheet(
         isVisible = state.isVisible,

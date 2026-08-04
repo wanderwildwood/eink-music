@@ -69,11 +69,7 @@ internal fun IntervalIndicator(
         ((currentPositionMs - gapStartMs).toFloat() / (gapEndMs - gapStartMs).toFloat()).coerceIn(0f, 1f)
     } else 0f
 
-    val animatedProgress by animateFloatAsState(
-        targetValue = progress,
-        animationSpec = tween(durationMillis = 100, easing = LinearEasing),
-        label = "intervalProgress"
-    )
+    val animatedProgress = progress
 
     Box(
         modifier = modifier

@@ -130,11 +130,7 @@ fun SongMenu(
 
     val cacheViewModel = hiltViewModel<CachePlaylistViewModel>()
 
-    val rotationAnimation by animateFloatAsState(
-        targetValue = refetchIconDegree,
-        animationSpec = tween(durationMillis = 800),
-        label = "",
-    )
+    val rotationAnimation = refetchIconDegree
 
     val isPinned by database.speedDialDao.isPinned(song.id).collectAsStateWithLifecycle(initialValue = false)
 

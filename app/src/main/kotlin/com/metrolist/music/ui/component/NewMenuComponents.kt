@@ -51,17 +51,9 @@ fun NewActionButton(
     backgroundColor: Color = MaterialTheme.colorScheme.surfaceVariant,
     contentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
 ) {
-    val animatedBackground by animateColorAsState(
-        targetValue = if (enabled) backgroundColor else backgroundColor.copy(alpha = 0.5f),
-        animationSpec = tween(200),
-        label = "background",
-    )
+    val animatedBackground = if (enabled) backgroundColor else backgroundColor.copy(alpha = 0.5f)
 
-    val animatedContent by animateColorAsState(
-        targetValue = if (enabled) contentColor else contentColor.copy(alpha = 0.5f),
-        animationSpec = tween(200),
-        label = "content",
-    )
+    val animatedContent = if (enabled) contentColor else contentColor.copy(alpha = 0.5f)
 
     var performAction by remember { mutableStateOf(false) }
 
@@ -259,17 +251,9 @@ fun NewIconButton(
     backgroundColor: Color = MaterialTheme.colorScheme.surfaceVariant,
     contentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
 ) {
-    val animatedBackground by animateColorAsState(
-        targetValue = if (enabled) backgroundColor else backgroundColor.copy(alpha = 0.5f),
-        animationSpec = tween(200),
-        label = "background",
-    )
+    val animatedBackground = if (enabled) backgroundColor else backgroundColor.copy(alpha = 0.5f)
 
-    val animatedContent by animateColorAsState(
-        targetValue = if (enabled) contentColor else contentColor.copy(alpha = 0.5f),
-        animationSpec = tween(200),
-        label = "content",
-    )
+    val animatedContent = if (enabled) contentColor else contentColor.copy(alpha = 0.5f)
 
     Card(
         modifier =

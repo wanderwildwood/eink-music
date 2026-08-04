@@ -42,13 +42,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Button
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.Spring
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 
@@ -280,21 +273,7 @@ fun SleepTimerDialog(
         }
 
         item {
-            AnimatedVisibility(
-                visible = selectedRepeat == "daily",
-                enter = expandVertically(
-                    animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioMediumBouncy,
-                        stiffness = Spring.StiffnessMedium,
-                    ),
-                ) + fadeIn(),
-                exit = shrinkVertically(
-                    animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioMediumBouncy,
-                        stiffness = Spring.StiffnessMedium,
-                    ),
-                ) + fadeOut(),
-            ) {
+            if (selectedRepeat == "daily") {
                 ElevatedCard(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -311,21 +290,7 @@ fun SleepTimerDialog(
         }
 
         item {
-            AnimatedVisibility(
-                visible = selectedRepeat == "weekdays_weekends",
-                enter = expandVertically(
-                    animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioLowBouncy,
-                        stiffness = Spring.StiffnessMedium,
-                    ),
-                ) + fadeIn(),
-                exit = shrinkVertically(
-                    animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioLowBouncy,
-                        stiffness = Spring.StiffnessMedium,
-                    ),
-                ) + fadeOut(),
-            ) {
+            if (selectedRepeat == "weekdays_weekends") {
                 ElevatedCard(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -362,21 +327,7 @@ fun SleepTimerDialog(
                                 modifier = Modifier.scale(0.85f),
                             )
                         }
-                        AnimatedVisibility(
-                            visible = weekdaysEnabled,
-                            enter = expandVertically(
-                                animationSpec = spring(
-                                    dampingRatio = Spring.DampingRatioMediumBouncy,
-                                    stiffness = Spring.StiffnessMedium,
-                                ),
-                            ) + fadeIn(),
-                            exit = shrinkVertically(
-                                animationSpec = spring(
-                                    dampingRatio = Spring.DampingRatioMediumBouncy,
-                                    stiffness = Spring.StiffnessMedium,
-                                ),
-                            ) + fadeOut(),
-                        ) {
+                        if (weekdaysEnabled) {
                             TimeRangeRow(
                                 startTime = weekdaysStart,
                                 endTime = weekdaysEnd,
@@ -414,21 +365,7 @@ fun SleepTimerDialog(
                                 modifier = Modifier.scale(0.85f),
                             )
                         }
-                        AnimatedVisibility(
-                            visible = weekendsEnabled,
-                            enter = expandVertically(
-                                animationSpec = spring(
-                                    dampingRatio = Spring.DampingRatioMediumBouncy,
-                                    stiffness = Spring.StiffnessMedium,
-                                ),
-                            ) + fadeIn(),
-                            exit = shrinkVertically(
-                                animationSpec = spring(
-                                    dampingRatio = Spring.DampingRatioMediumBouncy,
-                                    stiffness = Spring.StiffnessMedium,
-                                ),
-                            ) + fadeOut(),
-                        ) {
+                        if (weekendsEnabled) {
                             TimeRangeRow(
                                 startTime = weekendsStart,
                                 endTime = weekendsEnd,
@@ -444,21 +381,7 @@ fun SleepTimerDialog(
 
 
         item {
-            AnimatedVisibility(
-                visible = selectedRepeat == "custom",
-                enter = expandVertically(
-                    animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioLowBouncy,
-                        stiffness = Spring.StiffnessMedium,
-                    ),
-                ) + fadeIn(),
-                exit = shrinkVertically(
-                    animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioLowBouncy,
-                        stiffness = Spring.StiffnessMedium,
-                    ),
-                ) + fadeOut(),
-            ) {
+            if (selectedRepeat == "custom") {
                 ElevatedCard(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -510,21 +433,7 @@ fun SleepTimerDialog(
                                         modifier = Modifier.scale(0.85f),
                                     )
                                 }
-                                AnimatedVisibility(
-                                    visible = isDaySelected,
-                                    enter = expandVertically(
-                                        animationSpec = spring(
-                                            dampingRatio = Spring.DampingRatioMediumBouncy,
-                                            stiffness = Spring.StiffnessMedium,
-                                        ),
-                                    ) + fadeIn(),
-                                    exit = shrinkVertically(
-                                        animationSpec = spring(
-                                            dampingRatio = Spring.DampingRatioMediumBouncy,
-                                            stiffness = Spring.StiffnessMedium,
-                                        ),
-                                    ) + fadeOut(),
-                                ) {
+                                if (isDaySelected) {
                                     TimeRangeRow(
                                         startTime = dayTimes.first,
                                         endTime = dayTimes.second,

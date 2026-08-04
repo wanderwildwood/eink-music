@@ -90,12 +90,8 @@ internal fun LyricsTranslationHeader(
     status: LyricsTranslationHelper.TranslationStatus,
     modifier: Modifier = Modifier
 ) {
-    AnimatedVisibility(
-        visible = status !is LyricsTranslationHelper.TranslationStatus.Idle,
-        enter = fadeIn(),
-        exit = fadeOut(),
-        modifier = modifier
-    ) {
+    if (status !is LyricsTranslationHelper.TranslationStatus.Idle) {
+      Box(modifier = modifier) {
         when (status) {
             is LyricsTranslationHelper.TranslationStatus.Translating -> {
                 TranslationCard(
@@ -147,6 +143,7 @@ internal fun LyricsTranslationHeader(
             }
             else -> {}
         }
+      }
     }
 }
 
@@ -185,11 +182,7 @@ internal fun LyricsActionOverlay(
         modifier = modifier.padding(bottom = 16.dp),
         contentAlignment = Alignment.BottomCenter
     ) {
-        AnimatedVisibility(
-            visible = !isAutoScrollEnabled && isSynced && !isSelectionModeActive,
-            enter = slideInVertically { it } + fadeIn(),
-            exit = slideOutVertically { it } + fadeOut()
-        ) {
+        if (!isAutoScrollEnabled && isSynced && !isSelectionModeActive) {
             FilledTonalButton(onClick = onSyncClick) {
                 Icon(painterResource(R.drawable.sync), stringResource(R.string.auto_scroll), Modifier.size(20.dp))
                 Spacer(Modifier.width(8.dp))
@@ -197,11 +190,7 @@ internal fun LyricsActionOverlay(
             }
         }
         
-        AnimatedVisibility(
-            visible = isSelectionModeActive,
-            enter = slideInVertically { it } + fadeIn(),
-            exit = slideOutVertically { it } + fadeOut()
-        ) {
+        if (isSelectionModeActive) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -234,6 +223,7 @@ internal fun LyricsShareDialog(
 ) {
     val context = LocalContext.current
     BasicAlertDialog(onDismissRequest = onDismiss) {
+        DisableDialogWindowAnimation()
         Card(
             shape = MaterialTheme.shapes.medium,
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
@@ -340,6 +330,7 @@ internal fun LyricsColorPickerDialog(
     }
 
     BasicAlertDialog(onDismissRequest = onDismiss) {
+        DisableDialogWindowAnimation()
         Card(shape = RoundedCornerShape(20.dp), modifier = Modifier.fillMaxWidth().padding(20.dp)) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,

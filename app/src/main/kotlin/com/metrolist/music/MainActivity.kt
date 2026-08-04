@@ -20,7 +20,8 @@ import android.view.View
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -51,7 +52,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
+import com.metrolist.music.ui.component.NoAnimationAlertDialog
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
@@ -714,12 +715,12 @@ class MainActivity : ComponentActivity() {
                 }
                 val (slimNav) = rememberPreference(SlimNavBarKey, defaultValue = false)
                 val (useNewMiniPlayerDesign) = rememberPreference(UseNewMiniPlayerDesignKey, defaultValue = true)
-                val (defaultOpenTabInt) = rememberPreference(DefaultOpenTabKey, defaultValue = NavigationTab.HOME.name)
+                val (defaultOpenTabInt) = rememberPreference(DefaultOpenTabKey, defaultValue = NavigationTab.LIBRARY.name)
                 val defaultOpenTab = remember(defaultOpenTabInt) {
                     try {
                         NavigationTab.valueOf(defaultOpenTabInt)
                     } catch (_: IllegalArgumentException) {
-                        NavigationTab.HOME
+                        NavigationTab.LIBRARY
                     }
                 }
                 val tabOpenedFromShortcut =
@@ -798,11 +799,7 @@ class MainActivity : ComponentActivity() {
                         0.dp
                     }
 
-                val navigationBarHeight by animateDpAsState(
-                    targetValue = if (shouldShowNavigationBar && !showRail) NavigationBarHeight else 0.dp,
-                    animationSpec = NavigationBarAnimationSpec,
-                    label = "navBarHeight",
-                )
+                val navigationBarHeight = if (shouldShowNavigationBar && !showRail) NavigationBarHeight else 0.dp
 
                 val playerBottomSheetState =
                     rememberBottomSheetState(
@@ -1012,11 +1009,7 @@ class MainActivity : ComponentActivity() {
                     Scaffold(
                         snackbarHost = { SnackbarHost(snackbarHostState) },
                         topBar = {
-                            AnimatedVisibility(
-                                visible = shouldShowTopBar,
-                                enter = fadeIn(animationSpec = tween(durationMillis = 300)),
-                                exit = fadeOut(animationSpec = tween(durationMillis = 200)),
-                            ) {
+                            if (shouldShowTopBar) {
                                 Row {
                                     TopAppBar(
                                         title = {
@@ -1305,46 +1298,10 @@ class MainActivity : ComponentActivity() {
                                             NavigationTab.LIBRARY -> Screens.Library
                                             else -> Screens.Home
                                         }.route,
-                                    enterTransition = {
-                                        val currentRouteIndex = routeIndexMap[targetState.destination.route] ?: -1
-                                        val previousRouteIndex = routeIndexMap[initialState.destination.route] ?: -1
-
-                                        if (currentRouteIndex == -1 || currentRouteIndex > previousRouteIndex) {
-                                            slideInHorizontally { it / 8 } + fadeIn(tween(200))
-                                        } else {
-                                            slideInHorizontally { -it / 8 } + fadeIn(tween(200))
-                                        }
-                                    },
-                                    exitTransition = {
-                                        val currentRouteIndex = routeIndexMap[initialState.destination.route] ?: -1
-                                        val targetRouteIndex = routeIndexMap[targetState.destination.route] ?: -1
-
-                                        if (targetRouteIndex == -1 || targetRouteIndex > currentRouteIndex) {
-                                            slideOutHorizontally { -it / 8 } + fadeOut(tween(200))
-                                        } else {
-                                            slideOutHorizontally { it / 8 } + fadeOut(tween(200))
-                                        }
-                                    },
-                                    popEnterTransition = {
-                                        val currentRouteIndex = routeIndexMap[targetState.destination.route] ?: -1
-                                        val previousRouteIndex = routeIndexMap[initialState.destination.route] ?: -1
-
-                                        if (previousRouteIndex != -1 && previousRouteIndex < currentRouteIndex) {
-                                            slideInHorizontally { it / 8 } + fadeIn(tween(200))
-                                        } else {
-                                            slideInHorizontally { -it / 8 } + fadeIn(tween(200))
-                                        }
-                                    },
-                                    popExitTransition = {
-                                        val currentRouteIndex = routeIndexMap[initialState.destination.route] ?: -1
-                                        val targetRouteIndex = routeIndexMap[targetState.destination.route] ?: -1
-
-                                        if (currentRouteIndex != -1 && currentRouteIndex < targetRouteIndex) {
-                                            slideOutHorizontally { -it / 8 } + fadeOut(tween(200))
-                                        } else {
-                                            slideOutHorizontally { it / 8 } + fadeOut(tween(200))
-                                        }
-                                    },
+                                    enterTransition = { EnterTransition.None },
+                                    exitTransition = { ExitTransition.None },
+                                    popEnterTransition = { EnterTransition.None },
+                                    popExitTransition = { ExitTransition.None },
                                     modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                                 ) {
                                     navigationBuilder(
@@ -1407,7 +1364,7 @@ class MainActivity : ComponentActivity() {
                     if (!showChangelog.value && !kmpUpgradeDismissed) {
                         kmpRelease?.let { release ->
                             val downloadUrl = release.assets.first { it.name == Updater.KMP_APK_NAME }.downloadUrl
-                            AlertDialog(
+                            NoAnimationAlertDialog(
                                 onDismissRequest = { kmpUpgradeDismissed = true },
                                 title = {
                                     Text(stringResource(R.string.kmp_upgrade_title, release.versionName))

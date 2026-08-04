@@ -1540,8 +1540,11 @@ class SyncUtils @Inject constructor(
                     Timber.d("syncPlaylist: Updating local playlist (remote: ${remoteIds.size}, local: ${localIds.size})")
 
                     val localSongsBeforeSync = database.playlistSongs(playlistId).first()
-                    val downloadedSongIds = localSongsBeforeSync
-                        .filter { it.song.song.isDownloaded || it.song.song.dateDownload != null }
+                    // Preserve both YT-downloaded songs AND locally-scanned files (isLocal) —
+                    // neither exists on the remote YouTube Music playlist, so a naive
+                    // clear-and-repopulate-from-remote would silently drop them every resync.
+                    val preservedSongIds = localSongsBeforeSync
+                        .filter { it.song.song.isDownloaded || it.song.song.dateDownload != null || it.song.song.isLocal }
                         .map { it.song.id }
                         .toSet()
 
@@ -1553,7 +1556,7 @@ class SyncUtils @Inject constructor(
                             }
                         }
 
-                        downloadedSongIds.forEach { songId ->
+                        preservedSongIds.forEach { songId ->
                             if (songId !in remoteIds) {
                                 val existingSong = database.getSongByIdBlocking(songId)
                                 if (existingSong != null) {
@@ -1566,7 +1569,7 @@ class SyncUtils @Inject constructor(
                                             position = maxPosition + 1
                                         )
                                     )
-                                    Timber.d("syncPlaylist: Preserved downloaded song $songId in playlist")
+                                    Timber.d("syncPlaylist: Preserved local/downloaded song $songId in playlist")
                                 }
                             }
                         }

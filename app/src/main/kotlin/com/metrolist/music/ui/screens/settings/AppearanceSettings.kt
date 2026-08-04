@@ -204,7 +204,7 @@ fun AppearanceSettings(
     val (defaultOpenTab, onDefaultOpenTabChange) =
         rememberEnumPreference(
             DefaultOpenTabKey,
-            defaultValue = NavigationTab.HOME,
+            defaultValue = NavigationTab.LIBRARY,
         )
     val (playerButtonsStyle, onPlayerButtonsStyleChange) =
         rememberEnumPreference(

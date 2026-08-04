@@ -438,7 +438,7 @@ fun AlbumScreen(
                         modifier =
                             Modifier
                                 .fillMaxWidth()
-                                .animateItem()
+                                
                                 .combinedClickable(
                                     onClick = {
                                         if (inSelectMode) {
@@ -470,7 +470,7 @@ fun AlbumScreen(
                 item(key = "other_versions_title") {
                     NavigationTitle(
                         title = stringResource(R.string.other_versions),
-                        modifier = Modifier.animateItem(),
+                        modifier = Modifier,
                     )
                 }
                 item(key = "other_versions_list") {
@@ -499,7 +499,7 @@ fun AlbumScreen(
                                                     )
                                                 }
                                             },
-                                        ).animateItem(),
+                                        ),
                             )
                         }
                     }
