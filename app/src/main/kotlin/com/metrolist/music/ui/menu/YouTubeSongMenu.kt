@@ -61,7 +61,6 @@ import com.metrolist.music.LocalNavController
 import com.metrolist.innertube.models.SongItem
 import com.metrolist.music.LocalDatabase
 import com.metrolist.music.LocalDownloadUtil
-import com.metrolist.music.LocalListenTogetherManager
 import com.metrolist.music.LocalPlayerConnection
 import com.metrolist.music.LocalSyncUtils
 import com.metrolist.music.R
@@ -107,7 +106,6 @@ fun YouTubeSongMenu(
     val download by LocalDownloadUtil.current.getDownload(song.id).collectAsStateWithLifecycle(initialValue = null)
     val coroutineScope = rememberCoroutineScope()
     val syncUtils = LocalSyncUtils.current
-    val listenTogetherManager = LocalListenTogetherManager.current
     val isPinned by database.speedDialDao.isPinned(song.id).collectAsStateWithLifecycle(initialValue = false)
     val artists = remember {
         song.artists.mapNotNull {
@@ -279,7 +277,7 @@ fun YouTubeSongMenu(
     val configuration = LocalConfiguration.current
     val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
 
-    val isGuest = listenTogetherManager?.isInRoom == true && !listenTogetherManager.isHost
+    val isGuest = false
 
     LazyColumn(
         contentPadding = PaddingValues(
@@ -352,30 +350,6 @@ fun YouTubeSongMenu(
         item {
             Material3MenuGroup(
                 items = listOfNotNull(
-                    if (listenTogetherManager != null && listenTogetherManager.isInRoom && !listenTogetherManager.isHost) {
-                        Material3MenuItemData(
-                            title = { Text(text = stringResource(R.string.suggest_to_host)) },
-                            icon = {
-                                Icon(
-                                    painter = painterResource(R.drawable.queue_music),
-                                    contentDescription = null,
-                                )
-                            },
-                            onClick = {
-                                val durationMs = if (song.duration != null && song.duration!! > 0) song.duration!! * 1000L else 180000L
-                                val trackInfo = com.metrolist.music.listentogether.TrackInfo(
-                                    id = song.id,
-                                    title = song.title,
-                                    artist = artists.joinToString(", ") { it.name },
-                                    album = song.album?.name,
-                                    duration = durationMs,
-                                    thumbnail = song.thumbnail
-                                )
-                                listenTogetherManager.suggestTrack(trackInfo)
-                                onDismiss()
-                            }
-                        )
-                    } else null,
                     if (!isGuest) {
                         Material3MenuItemData(
                             title = { Text(text = stringResource(R.string.start_radio)) },

@@ -80,7 +80,6 @@ import androidx.compose.ui.unit.sp
 import androidx.media3.common.Player
 import coil3.compose.AsyncImage
 import com.metrolist.music.LocalDatabase
-import com.metrolist.music.LocalListenTogetherManager
 import com.metrolist.music.LocalPlayerConnection
 import com.metrolist.music.R
 import com.metrolist.music.constants.CropAlbumArtKey
@@ -92,7 +91,6 @@ import com.metrolist.music.constants.SwipeThumbnailKey
 import com.metrolist.music.constants.ThumbnailCornerRadius
 import com.metrolist.music.constants.UseNewMiniPlayerDesignKey
 import com.metrolist.music.db.entities.ArtistEntity
-import com.metrolist.music.listentogether.ListenTogetherManager
 import com.metrolist.music.models.MediaMetadata
 import com.metrolist.music.playback.CastConnectionHandler
 import com.metrolist.music.playback.PlayerConnection
@@ -215,9 +213,7 @@ private fun NewMiniPlayer(
     val swipeSensitivity by rememberPreference(SwipeSensitivityKey, 0.73f)
     val swipeThumbnailPref by rememberPreference(SwipeThumbnailKey, true)
 
-    // Disable swipe for Listen Together guests
-    val listenTogetherManager = LocalListenTogetherManager.current
-    val isListenTogetherGuest = listenTogetherManager?.let { it.isInRoom && !it.isHost } ?: false
+    val isListenTogetherGuest = false
     val swipeThumbnail = swipeThumbnailPref && !isListenTogetherGuest
 
     val layoutDirection = LocalLayoutDirection.current
@@ -439,7 +435,7 @@ private fun NewMiniPlayer(
                     mediaMetadata = mediaMetadata,
                     primaryColor = primaryColor,
                     outlineColor = outlineColor,
-                    listenTogetherManager = listenTogetherManager,
+                    isListenTogetherGuest = isListenTogetherGuest,
                 )
 
                 Spacer(modifier = Modifier.width(16.dp))
@@ -524,12 +520,11 @@ private fun NewMiniPlayerPlayButton(
     mediaMetadata: MediaMetadata?,
     primaryColor: Color,
     outlineColor: Color,
-    listenTogetherManager: ListenTogetherManager?,
+    isListenTogetherGuest: Boolean = false,
 ) {
     val isPlaying by playerConnection.isPlaying.collectAsState()
     val castIsPlaying by castHandler?.castIsPlaying?.collectAsState() ?: remember { mutableStateOf(false) }
     val effectiveIsPlaying = if (isCasting) castIsPlaying else isPlaying
-    val isListenTogetherGuest = listenTogetherManager?.let { it.isInRoom && !it.isHost } ?: false
     val isMuted by playerConnection.isMuted.collectAsStateWithLifecycle()
 
     val trackColor = outlineColor.copy(alpha = 0.2f)
@@ -725,9 +720,7 @@ private fun LegacyMiniPlayer(
     val swipeSensitivity by rememberPreference(SwipeSensitivityKey, 0.73f)
     val swipeThumbnailPref by rememberPreference(SwipeThumbnailKey, true)
 
-    // Disable swipe for Listen Together guests
-    val listenTogetherManager = LocalListenTogetherManager.current
-    val isListenTogetherGuest = listenTogetherManager?.let { it.isInRoom && !it.isHost } ?: false
+    val isListenTogetherGuest = false
     val swipeThumbnail = swipeThumbnailPref && !isListenTogetherGuest
 
     val layoutDirection = LocalLayoutDirection.current
@@ -873,7 +866,7 @@ private fun LegacyMiniPlayer(
                 isCasting = isCasting,
                 castHandler = castHandler,
                 playerConnection = playerConnection,
-                listenTogetherManager = listenTogetherManager,
+                isListenTogetherGuest = isListenTogetherGuest,
             )
 
             IconButton(
@@ -915,12 +908,11 @@ private fun LegacyPlayPauseButton(
     isCasting: Boolean,
     castHandler: CastConnectionHandler?,
     playerConnection: PlayerConnection,
-    listenTogetherManager: ListenTogetherManager?,
+    isListenTogetherGuest: Boolean = false,
 ) {
     val isPlaying by playerConnection.isPlaying.collectAsState()
     val castIsPlaying by castHandler?.castIsPlaying?.collectAsState() ?: remember { mutableStateOf(false) }
     val effectiveIsPlaying = if (isCasting) castIsPlaying else isPlaying
-    val isListenTogetherGuest = listenTogetherManager?.let { it.isInRoom && !it.isHost } ?: false
     val isMuted by playerConnection.isMuted.collectAsStateWithLifecycle()
 
     IconButton(

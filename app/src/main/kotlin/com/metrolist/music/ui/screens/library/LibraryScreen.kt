@@ -33,11 +33,15 @@ fun LibraryScreen() {
                     LibraryFilter.SONGS to stringResource(R.string.filter_songs),
                     LibraryFilter.ALBUMS to stringResource(R.string.filter_albums),
                     LibraryFilter.ARTISTS to stringResource(R.string.filter_artists),
-                    LibraryFilter.PODCASTS to stringResource(R.string.filter_podcasts),
+                    LibraryFilter.MORE to stringResource(R.string.filter_more),
                 ),
                 currentValue = filterType,
                 onValueUpdate = {
-                    filterType = if (filterType == it) LibraryFilter.LIBRARY else it
+                    if (it == LibraryFilter.MORE) {
+                        navController.navigate("library_more")
+                    } else {
+                        filterType = if (filterType == it) LibraryFilter.LIBRARY else it
+                    }
                 },
                 modifier = Modifier.weight(1f),
             )
@@ -60,10 +64,8 @@ fun LibraryScreen() {
                 navController,
                 { filterType = LibraryFilter.LIBRARY },
             )
-            LibraryFilter.PODCASTS -> LibraryPodcastsScreen(
-                navController,
-                { filterType = LibraryFilter.LIBRARY },
-            )
+            LibraryFilter.PODCASTS -> LibraryMixScreen(navController, filterContent)
+            LibraryFilter.MORE -> LibraryMixScreen(navController, filterContent)
         }
     }
 }

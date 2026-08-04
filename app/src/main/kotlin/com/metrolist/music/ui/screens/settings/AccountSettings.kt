@@ -85,12 +85,7 @@ fun AccountSettings(
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
 
-    val (accountNamePref, onAccountNameChange) = rememberPreference(AccountNameKey, "")
-    val (accountEmail, onAccountEmailChange) = rememberPreference(AccountEmailKey, "")
-    val (accountChannelHandle, onAccountChannelHandleChange) = rememberPreference(AccountChannelHandleKey, "")
     val (innerTubeCookie, onInnerTubeCookieChange) = rememberPreference(InnerTubeCookieKey, "")
-    val (visitorData, onVisitorDataChange) = rememberPreference(VisitorDataKey, "")
-    val (dataSyncId, onDataSyncIdChange) = rememberPreference(DataSyncIdKey, "")
 
     val isLoggedIn = remember(innerTubeCookie) {
         "SAPISID" in parseCookieString(innerTubeCookie)
@@ -103,8 +98,6 @@ fun AccountSettings(
     val accountName by homeViewModel.accountName.collectAsStateWithLifecycle()
     val accountImageUrl by homeViewModel.accountImageUrl.collectAsStateWithLifecycle()
 
-    var showToken by remember { mutableStateOf(false) }
-    var showTokenEditor by remember { mutableStateOf(false) }
     var showLogoutDialog by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
@@ -187,69 +180,6 @@ fun AccountSettings(
             )
         }
 
-        if (showTokenEditor) {
-            val text = """
-                ***INNERTUBE COOKIE*** =$innerTubeCookie
-                ***VISITOR DATA*** =$visitorData
-                ***DATASYNC ID*** =$dataSyncId
-                ***ACCOUNT NAME*** =$accountNamePref
-                ***ACCOUNT EMAIL*** =$accountEmail
-                ***ACCOUNT CHANNEL HANDLE*** =$accountChannelHandle
-            """.trimIndent()
-
-            TextFieldDialog(
-                initialTextFieldValue = TextFieldValue(text),
-                onDone = { data ->
-                    var cookie = ""
-                    var visitorDataValue = ""
-                    var dataSyncIdValue = ""
-                    var accountNameValue = ""
-                    var accountEmailValue = ""
-                    var accountChannelHandleValue = ""
-
-                    data.split("\n").forEach {
-                        when {
-                            it.startsWith("***INNERTUBE COOKIE*** =") -> cookie = it.substringAfter("=")
-                            it.startsWith("***VISITOR DATA*** =") -> visitorDataValue = it.substringAfter("=")
-                            it.startsWith("***DATASYNC ID*** =") -> dataSyncIdValue = it.substringAfter("=")
-                            it.startsWith("***ACCOUNT NAME*** =") -> accountNameValue = it.substringAfter("=")
-                            it.startsWith("***ACCOUNT EMAIL*** =") -> accountEmailValue = it.substringAfter("=")
-                            it.startsWith("***ACCOUNT CHANNEL HANDLE*** =") -> accountChannelHandleValue = it.substringAfter("=")
-                        }
-                    }
-                    // Write all credentials atomically to DataStore and wait for completion
-                    // before restarting, preventing the race condition where the process
-                    // would be killed before async DataStore coroutines finished writing.
-                    accountSettingsViewModel.saveTokenAndRestart(
-                        context = context,
-                        cookie = cookie,
-                        visitorData = visitorDataValue,
-                        dataSyncId = dataSyncIdValue,
-                        accountName = accountNameValue,
-                        accountEmail = accountEmailValue,
-                        accountChannelHandle = accountChannelHandleValue,
-                    )
-                },
-                onDismiss = { showTokenEditor = false },
-                singleLine = false,
-                maxLines = 20,
-                isInputValid = { fullText ->
-                    // Extract the cookie value from the formatted template line,
-                    // then validate it separately — avoids the bug where parseCookieString
-                    // received the entire multi-line template and failed to find "SAPISID"
-                    // as a key because the "***INNERTUBE COOKIE*** =" prefix shadowed it.
-                    val cookieLine = fullText.lines()
-                        .find { it.startsWith("***INNERTUBE COOKIE*** =") }
-                    val cookieValue = cookieLine?.substringAfter("***INNERTUBE COOKIE*** =")?.trim() ?: ""
-                    cookieValue.isNotEmpty() && "SAPISID" in parseCookieString(cookieValue)
-                },
-                extraContent = {
-                    Spacer(Modifier.height(8.dp))
-                    InfoLabel(text = stringResource(R.string.token_adv_login_description))
-                }
-            )
-        }
-
         Material3SettingsGroup(
             items = listOf(
                 Material3SettingsItem(
@@ -308,23 +238,6 @@ fun AccountSettings(
         Material3SettingsGroup(
             items = listOf(
                 Material3SettingsItem(
-                    title = {
-                        Text(
-                            when {
-                                !isLoggedIn -> stringResource(R.string.advanced_login)
-                                showToken -> stringResource(R.string.token_shown)
-                                else -> stringResource(R.string.token_hidden)
-                            }
-                        )
-                    },
-                    icon = painterResource(R.drawable.token),
-                    onClick = {
-                        if (!isLoggedIn) showTokenEditor = true
-                        else if (!showToken) showToken = true
-                        else showTokenEditor = true
-                    }
-                ),
-                Material3SettingsItem(
                     title = { Text(stringResource(R.string.more_content)) },
                     icon = painterResource(R.drawable.cached),
                     trailingContent = {
@@ -380,20 +293,6 @@ fun AccountSettings(
                 .clip(RoundedCornerShape(16.dp))
                 .background(MaterialTheme.colorScheme.surfaceContainer)
         ) {
-            PreferenceEntry(
-                title = { Text(stringResource(R.string.integrations)) },
-                icon = { Icon(painterResource(R.drawable.integration), null) },
-                onClick = {
-                    onClose()
-                    navController.navigate("settings/integrations")
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.surfaceContainer)
-            )
-
-            Spacer(Modifier.height(4.dp))
-
             PreferenceEntry(
                 title = { Text(stringResource(R.string.settings)) },
                 icon = {

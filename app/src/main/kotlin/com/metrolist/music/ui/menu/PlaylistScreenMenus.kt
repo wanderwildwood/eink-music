@@ -32,7 +32,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.media3.exoplayer.offline.Download
-import com.metrolist.music.LocalListenTogetherManager
 import com.metrolist.music.R
 import com.metrolist.music.db.entities.Playlist
 import com.metrolist.music.db.entities.PlaylistSong
@@ -61,8 +60,7 @@ fun LocalPlaylistMenu(
     onQueue: () -> Unit,
     onDismiss: () -> Unit,
 ) {
-    val listenTogetherManager = LocalListenTogetherManager.current
-    val isGuest = listenTogetherManager?.isInRoom == true && !listenTogetherManager.isHost
+    val isGuest = false
     val coroutineScope = rememberCoroutineScope()
     val localContext = LocalContext.current
 
@@ -320,8 +318,7 @@ fun AutoPlaylistMenu(
     songs: List<Song> = emptyList(),
     playlistName: String = "Playlist",
 ) {
-    val listenTogetherManager = LocalListenTogetherManager.current
-    val isGuest = listenTogetherManager?.isInRoom == true && !listenTogetherManager.isHost
+    val isGuest = false
     val coroutineScope = rememberCoroutineScope()
     val localContext = LocalContext.current
 
@@ -504,8 +501,7 @@ fun TopPlaylistMenu(
     onDownload: () -> Unit,
     onDismiss: () -> Unit,
 ) {
-    val listenTogetherManager = LocalListenTogetherManager.current
-    val isGuest = listenTogetherManager?.isInRoom == true && !listenTogetherManager.isHost
+    val isGuest = false
 
     val downloadMenuItem =
         when (downloadState) {
@@ -668,8 +664,7 @@ fun CachePlaylistMenu(
     onDownload: () -> Unit,
     onDismiss: () -> Unit,
 ) {
-    val listenTogetherManager = LocalListenTogetherManager.current
-    val isGuest = listenTogetherManager?.isInRoom == true && !listenTogetherManager.isHost
+    val isGuest = false
 
     val downloadMenuItem =
         when (downloadState) {

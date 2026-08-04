@@ -5,11 +5,6 @@
 
 package com.metrolist.music.ui.screens.settings
 
-import android.content.ActivityNotFoundException
-import android.content.Intent
-import android.os.Build
-import android.provider.Settings
-import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -27,7 +22,6 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import androidx.navigation.NavController
 import com.metrolist.music.BuildConfig
 import com.metrolist.music.LocalPlayerAwareWindowInsets
@@ -48,7 +42,6 @@ fun SettingsScreen(
 ) {
     val uriHandler = LocalUriHandler.current
     val context = LocalContext.current
-    val isAndroid12OrLater = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
     val hasAndroidAuto = remember {
         try {
             context.packageManager.getPackageInfo(
@@ -74,20 +67,6 @@ fun SettingsScreen(
             )
         )
 
-        // User Interface Section
-        Material3SettingsGroup(
-            title = stringResource(R.string.settings_section_ui),
-            items = listOf(
-                Material3SettingsItem(
-                    icon = painterResource(R.drawable.palette),
-                    title = { Text(stringResource(R.string.appearance)) },
-                    onClick = { navController.navigate("settings/appearance") }
-                )
-            )
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
         // Player & Content Section (moved up and combined with content)
         Material3SettingsGroup(
             title = stringResource(R.string.settings_section_player_content),
@@ -101,16 +80,6 @@ fun SettingsScreen(
                     icon = painterResource(R.drawable.radio),
                     title = { Text(stringResource(R.string.stream_sources)) },
                     onClick = { navController.navigate("settings/stream_sources") }
-                ),
-                Material3SettingsItem(
-                    icon = painterResource(R.drawable.language),
-                    title = { Text(stringResource(R.string.content)) },
-                    onClick = { navController.navigate("settings/content") }
-                ),
-                Material3SettingsItem(
-                    icon = painterResource(R.drawable.translate),
-                    title = { Text(stringResource(R.string.ai_lyrics_translation)) },
-                    onClick = { navController.navigate("settings/ai") }
                 )
             )
         )
@@ -155,11 +124,6 @@ fun SettingsScreen(
                     icon = painterResource(R.drawable.storage),
                     title = { Text(stringResource(R.string.storage)) },
                     onClick = { navController.navigate("settings/storage") }
-                ),
-                Material3SettingsItem(
-                    icon = painterResource(R.drawable.restore),
-                    title = { Text(stringResource(R.string.backup_restore)) },
-                    onClick = { navController.navigate("settings/backup_restore") }
                 )
             )
         )
@@ -170,50 +134,6 @@ fun SettingsScreen(
         Material3SettingsGroup(
             title = stringResource(R.string.settings_section_system),
             items = buildList {
-                if (isAndroid12OrLater) {
-                    add(
-                        Material3SettingsItem(
-                            icon = painterResource(R.drawable.link),
-                            title = { Text(stringResource(R.string.default_links)) },
-                            onClick = {
-                                try {
-                                    val intent = Intent(
-                                        Settings.ACTION_APP_OPEN_BY_DEFAULT_SETTINGS,
-                                        "package:${context.packageName}".toUri()
-                                    )
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                    context.startActivity(intent)
-                                } catch (e: Exception) {
-                                    when (e) {
-                                        is ActivityNotFoundException -> {
-                                            Toast.makeText(
-                                                context,
-                                                R.string.open_app_settings_error,
-                                                Toast.LENGTH_LONG
-                                            ).show()
-                                        }
-
-                                        is SecurityException -> {
-                                            Toast.makeText(
-                                                context,
-                                                R.string.open_app_settings_error,
-                                                Toast.LENGTH_LONG
-                                            ).show()
-                                        }
-
-                                        else -> {
-                                            Toast.makeText(
-                                                context,
-                                                R.string.open_app_settings_error,
-                                                Toast.LENGTH_LONG
-                                            ).show()
-                                        }
-                                    }
-                                }
-                            }
-                        )
-                    )
-                }
                 if (BuildConfig.UPDATER_AVAILABLE) {
                     add(
                         Material3SettingsItem(
@@ -223,21 +143,6 @@ fun SettingsScreen(
                         )
                     )
                 }
-                val showChangelog = com.metrolist.music.LocalChangelogState.current
-                add(
-                    Material3SettingsItem(
-                        icon = painterResource(R.drawable.newspaper),
-                        title = { Text(stringResource(R.string.changelog)) },
-                        onClick = { showChangelog.value = true }
-                    )
-                )
-                add(
-                    Material3SettingsItem(
-                        icon = painterResource(R.drawable.info),
-                        title = { Text(stringResource(R.string.about)) },
-                        onClick = { navController.navigate("settings/about") }
-                    )
-                )
                 if (BuildConfig.UPDATER_AVAILABLE && latestVersionName != BuildConfig.VERSION_NAME) {
                     val releaseInfo = Updater.getCachedLatestRelease()
                     val downloadUrl = releaseInfo?.let { Updater.getDownloadUrlForCurrentVariant(it) }

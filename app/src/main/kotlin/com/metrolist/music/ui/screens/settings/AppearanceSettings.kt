@@ -644,6 +644,7 @@ fun AppearanceSettings(
                     LibraryFilter.PLAYLISTS -> stringResource(R.string.playlists)
                     LibraryFilter.PODCASTS -> stringResource(R.string.filter_podcasts)
                     LibraryFilter.LIBRARY -> stringResource(R.string.filter_library)
+                    LibraryFilter.MORE -> stringResource(R.string.filter_more)
                 }
             },
         )
@@ -1642,6 +1643,7 @@ fun AppearanceSettings(
                                     LibraryFilter.PLAYLISTS -> stringResource(R.string.playlists)
                                     LibraryFilter.PODCASTS -> stringResource(R.string.filter_podcasts)
                                     LibraryFilter.LIBRARY -> stringResource(R.string.filter_library)
+                                    LibraryFilter.MORE -> stringResource(R.string.filter_more)
                                 },
                             )
                         },

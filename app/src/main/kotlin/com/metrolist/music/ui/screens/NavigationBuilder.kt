@@ -31,6 +31,7 @@ import com.metrolist.music.ui.screens.artist.ArtistScreen
 import com.metrolist.music.ui.screens.artist.ArtistSongsScreen
 import com.metrolist.music.ui.screens.equalizer.EqScreen
 import com.metrolist.music.ui.screens.equalizer.wizard.WizardScreen
+import com.metrolist.music.ui.screens.library.LibraryMoreScreen
 import com.metrolist.music.ui.screens.library.LibraryScreen
 import com.metrolist.music.ui.screens.playlist.AutoPlaylistScreen
 import com.metrolist.music.ui.screens.playlist.CachePlaylistScreen
@@ -60,7 +61,6 @@ import com.metrolist.music.ui.screens.settings.UpdaterScreen
 import com.metrolist.music.ui.screens.settings.integrations.DiscordSettings
 import com.metrolist.music.ui.screens.settings.integrations.IntegrationScreen
 import com.metrolist.music.ui.screens.settings.integrations.LastFMSettings
-import com.metrolist.music.ui.screens.settings.integrations.ListenTogetherSettings
 
 import com.metrolist.music.ui.screens.wrapped.WrappedScreen
 import com.metrolist.music.utils.rememberEnumPreference
@@ -100,22 +100,8 @@ fun NavGraphBuilder.navigationBuilder(
         LibraryScreen()
     }
 
-    composable(Screens.ListenTogether.route) {
-        ListenTogetherScreen(navController, showTopBar = false)
-    }
-
-    composable(
-        route = "listen_together_from_topbar",
-    ) {
-        ListenTogetherScreen(navController, showTopBar = true)
-    }
-
-    composable("history") {
-        HistoryScreen(navController)
-    }
-
-    composable("stats") {
-        StatsScreen(navController)
+    composable("library_more") {
+        LibraryMoreScreen(navController)
     }
 
     composable("mood_and_genres") {
@@ -399,10 +385,6 @@ fun NavGraphBuilder.navigationBuilder(
 
     composable("settings/integrations/lastfm") {
         LastFMSettings(navController)
-    }
-
-    composable(route = "settings/integrations/listen_together") {
-        ListenTogetherSettings(navController)
     }
 
     composable("settings/updater") {

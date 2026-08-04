@@ -31,13 +31,6 @@ sealed class Screens(
         route = "search_input"
     )
 
-    object ListenTogether : Screens(
-        titleId = R.string.together,
-        iconIdInactive = R.drawable.group_outlined,
-        iconIdActive = R.drawable.group_filled,
-        route = "listen_together"
-    )
-
     object Library : Screens(
         titleId = R.string.filter_library,
         iconIdInactive = R.drawable.library_music_outlined,
@@ -46,6 +39,11 @@ sealed class Screens(
     )
 
     companion object {
-        val MainScreens = listOf(Home, Search, ListenTogether, Library)
+        // Home dropped from the bottom nav entirely — Library is the sole primary
+        // landing screen (CalmMusic-style local-first browsing), Search alongside it.
+        // Screens.Home/HomeScreen still exist (referenced by settings' "default open
+        // tab" picker and a couple of internal route lists) but are unreachable from
+        // any visible entry point.
+        val MainScreens = listOf(Library, Search)
     }
 }
