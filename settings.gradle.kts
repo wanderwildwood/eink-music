@@ -16,5 +16,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "CalmMusic"
+rootProject.name = "eink-music"
 include(":app")
