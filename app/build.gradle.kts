@@ -1,19 +1,21 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     id("com.android.application")
-    kotlin("android")
-    id("com.google.devtools.ksp") version "1.9.20-1.0.13"
+    id("com.google.devtools.ksp") version "2.3.10"
+    id("org.jetbrains.kotlin.plugin.compose")
 }
 
 android {
-    namespace = "com.calmapps.calmmusic"
-    compileSdk = 35
+    namespace = "com.wanderwildwood.einkmusic"
+    compileSdk = 37
 
     defaultConfig {
-        applicationId = "com.calmapps.calmmusic"
+        applicationId = "com.wanderwildwood.einkmusic"
         minSdk = 28
-        targetSdk = 35
-        versionCode = 11
-        versionName = "1.1.9"
+        targetSdk = 36
+        versionCode = 1
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -21,30 +23,43 @@ android {
         }
     }
 
+    // A fixed keystore checked into the repo (no real security value - this app isn't
+    // Play Store distributed) reused for both debug and release builds, so a downloaded
+    // release APK can upgrade a debug install in place instead of every machine/CI run
+    // producing a differently-signed build.
+    signingConfigs {
+        getByName("debug") {
+            storeFile = layout.projectDirectory.file("debug.keystore").asFile
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
         isCoreLibraryDesugaringEnabled = true
     }
 
-    kotlinOptions {
-        jvmTarget = "1.8"
+    kotlin {
+        jvmToolchain(21)
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_21)
+        }
     }
 
     buildFeatures {
         compose = true
         buildConfig = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.3"
     }
 
     packagingOptions {
@@ -60,19 +75,10 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.8.0")
     implementation("androidx.appcompat:appcompat:1.7.0")
 
-    // Apple MusicKit for Android
-    implementation(files("libs/musickitauth-release-1.1.2.aar"))
-    implementation(files("libs/mediaplayback-release-1.1.1.aar"))
-
-    // Networking (Retrofit + OkHttp) for Apple Music API
-    implementation("com.squareup.retrofit2:retrofit:2.11.0")
-    implementation("com.squareup.retrofit2:converter-moshi:2.11.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("androidx.media3:media3-datasource-okhttp:1.2.0")
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
-    val composeBom = platform("androidx.compose:compose-bom:2024.06.00")
+    val composeBom = platform("androidx.compose:compose-bom:2025.09.00")
     implementation(composeBom)
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
@@ -85,7 +91,7 @@ dependencies {
     implementation("com.mudita:MMD:1.0.0")
 
     // Room database for songs
-    val roomVersion = "2.6.1"
+    val roomVersion = "2.8.4"
     implementation("androidx.room:room-runtime:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
@@ -98,7 +104,9 @@ dependencies {
     implementation("androidx.media3:media3-session:1.3.1")
     implementation("androidx.media3:media3-ui:1.3.1")
 
-    implementation("com.github.teamnewpipe:NewPipeExtractor:v0.25.1")
+    implementation("com.github.MetrolistGroup:MetrolistExtractor:3cd3341") {
+        exclude(group = "com.google.protobuf")
+    }
 
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs_nio:2.0.4")
 
