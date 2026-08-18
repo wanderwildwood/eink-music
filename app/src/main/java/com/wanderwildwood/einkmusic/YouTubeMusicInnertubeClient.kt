@@ -80,8 +80,29 @@ internal class YouTubeMusicInnertubeClientImpl(
     private val apiKey: String = "AIzaSyC9XL3ZjWddXya6X74dJoCTL-WEYFDNX30"
     private val baseUrl: String = "https://youtubei.googleapis.com/youtubei/v1/search?prettyPrint=false&key=$apiKey"
 
-    // private val pipedBaseUrl: String = "https://pipedapi.kavin.rocks/streams/"
-    private val pipedBaseUrl: String = "https://api.piped.io/streams/"
+    /**
+     * Audio streams are resolved straight from Innertube's player endpoint.
+     *
+     * This used to go through a public Piped instance, but that whole approach
+     * died: api.piped.io no longer resolves in DNS at all, pipedapi.kavin.rocks
+     * answers 5xx, and the one instance still listed in Piped's own registry
+     * returns video metadata with an empty audioStreams array. Depending on
+     * somebody else's public proxy staying alive was the real bug.
+     *
+     * The ANDROID_VR client is used deliberately. As of 2026-08 it is the
+     * client that answers anonymously with playabilityStatus OK *and* hands
+     * back adaptiveFormats carrying plain `url` fields. WEB_REMIX (which this
+     * class still uses for search/browse, where it works fine) answers
+     * UNPLAYABLE for the player endpoint, and ANDROID_MUSIC / IOS_MUSIC both
+     * answer LOGIN_REQUIRED. If playback breaks again, re-probe these clients
+     * before assuming the bug is local.
+     */
+    private val playerUrl: String = "https://youtubei.googleapis.com/youtubei/v1/player?prettyPrint=false"
+
+    private val androidVrClientVersion: String = "1.60.19"
+    private val androidVrUserAgent: String =
+        "com.google.android.apps.youtube.vr.oculus/$androidVrClientVersion " +
+            "(Linux; U; Android 12; Quest 3) gzip"
 
     private val jsonMediaType = "application/json; charset=utf-8".toMediaType()
 
@@ -484,40 +505,70 @@ internal class YouTubeMusicInnertubeClientImpl(
     }
 
     override suspend fun getBestAudioUrl(videoId: String): String = withContext(Dispatchers.IO) {
+        val bodyJson = JSONObject().apply {
+            put("context", JSONObject().apply {
+                put("client", JSONObject().apply {
+                    put("clientName", "ANDROID_VR")
+                    put("clientVersion", androidVrClientVersion)
+                    put("deviceModel", "Quest 3")
+                    put("androidSdkVersion", 32)
+                    put("hl", "en")
+                    put("gl", "US")
+                })
+            })
+            put("videoId", videoId)
+            put("contentCheckOk", true)
+            put("racyCheckOk", true)
+        }
+
+        // Deliberately anonymous -- applyAuthHeaders() is NOT called here.
+        // Sending the signed-in music.youtube.com cookie/SAPISIDHASH alongside
+        // an Android client context makes YouTube answer LOGIN_REQUIRED and
+        // return no streams at all. Search still uses the authenticated path.
         val request = Request.Builder()
-            .url(pipedBaseUrl + videoId)
-            .get()
+            .url(playerUrl)
+            .header("User-Agent", androidVrUserAgent)
+            .post(bodyJson.toString().toRequestBody(jsonMediaType))
             .build()
 
         httpClient.newCall(request).execute().use { response ->
             if (!response.isSuccessful) {
-                error("Piped request failed: ${response.code}")
+                error("Innertube player request failed: ${response.code}")
             }
-            val bodyString = response.body?.string() ?: error("Empty Piped body")
+            val bodyString = response.body?.string() ?: error("Empty Innertube player body")
             val root = JSONObject(bodyString)
-            val audioStreams = root.optJSONArray("audioStreams")
-                ?: error("No audioStreams in Piped response")
+
+            val status = root.optJSONObject("playabilityStatus")?.optString("status").orEmpty()
+            if (status.isNotBlank() && status != "OK") {
+                val reason = root.optJSONObject("playabilityStatus")?.optString("reason").orEmpty()
+                error("Innertube player status $status${if (reason.isBlank()) "" else ": $reason"}")
+            }
+
+            val formats = root.optJSONObject("streamingData")?.optJSONArray("adaptiveFormats")
+                ?: error("No adaptiveFormats in Innertube player response")
 
             var bestAudio: JSONObject? = null
-            for (i in 0 until audioStreams.length()) {
-                val stream = audioStreams.optJSONObject(i) ?: continue
-                val url = stream.optString("url")
-                if (url.isNullOrBlank()) continue
+            var bestBitrate = -1
+            for (i in 0 until formats.length()) {
+                val format = formats.optJSONObject(i) ?: continue
+                if (!format.optString("mimeType").startsWith("audio")) continue
 
-                if (bestAudio == null) {
-                    bestAudio = stream
-                    continue
-                }
-                val currentBitrate = stream.optInt("bitrate", 0)
-                val bestBitrate = bestAudio?.optInt("bitrate", 0) ?: 0
-                if (currentBitrate > bestBitrate) {
-                    bestAudio = stream
+                // A format with no direct `url` is signature-ciphered and would
+                // need the player JS to decode. Skip it rather than hand
+                // ExoPlayer a URI it cannot fetch (which is what produced the
+                // "stuck at 0:00" symptom).
+                val url = format.optString("url")
+                if (url.isBlank()) continue
+
+                val bitrate = format.optInt("bitrate", 0)
+                if (bitrate > bestBitrate) {
+                    bestBitrate = bitrate
+                    bestAudio = format
                 }
             }
 
-            val url = bestAudio?.optString("url")?.takeIf { it.isNotBlank() }
-                ?: error("No audio URL in Piped response")
-            url
+            bestAudio?.optString("url")?.takeIf { it.isNotBlank() }
+                ?: error("No playable audio stream in Innertube player response")
         }
     }
 

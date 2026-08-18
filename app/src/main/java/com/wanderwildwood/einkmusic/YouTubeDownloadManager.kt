@@ -151,10 +151,10 @@ internal suspend fun performYouTubeDownloadInternal(
         val streamUrl = withContext(Dispatchers.IO) {
             try {
                 val url = app.youTubeInnertubeClient.getBestAudioUrl(videoId)
-                Log.i(TAG, "[$videoId] Resolved URL via InnerTube/Piped")
+                Log.i(TAG, "[$videoId] Resolved URL via InnerTube")
                 url
             } catch (e: Exception) {
-                Log.w(TAG, "[$videoId] InnerTube/Piped failed: ${e.message}. Falling back to NewPipe.")
+                Log.w(TAG, "[$videoId] InnerTube failed: ${e.message}. Falling back to NewPipe.")
                 val url = app.youTubeStreamResolver.getDownloadAudioUrl(videoId)
                 Log.i(TAG, "[$videoId] Resolved URL via NewPipe")
                 url

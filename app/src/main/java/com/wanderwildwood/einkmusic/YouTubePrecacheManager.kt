@@ -120,7 +120,7 @@ class YouTubePrecacheManager(private val app: CalmMusic) {
                     }
 
                     val (url, resolverLabel) = try {
-                        app.youTubeInnertubeClient.getBestAudioUrl(videoId) to "Innertube/Piped"
+                        app.youTubeInnertubeClient.getBestAudioUrl(videoId) to "Innertube"
                     } catch (_: Exception) {
                         app.youTubeStreamResolver.getBestAudioUrl(videoId) to "NewPipe"
                     }

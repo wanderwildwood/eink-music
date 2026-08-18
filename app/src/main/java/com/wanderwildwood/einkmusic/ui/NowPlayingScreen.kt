@@ -440,6 +440,6 @@ private fun NowPlayingScreenPreview() {
         onAddToLibraryClick = {},
         isInLibrary = true,
         sourceType = "YOUTUBE",
-        streamResolverLabel = "Innertube/Piped",
+        streamResolverLabel = "Innertube",
     )
 }

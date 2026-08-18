@@ -9,6 +9,13 @@ import org.schabi.newpipe.extractor.search.SearchInfo
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 
 /**
+ * NewPipeExtractor's content-filter key for YouTube Music songs, as accepted by
+ * YoutubeSearchQueryHandlerFactory. Kept as a literal rather than referencing the
+ * factory constant so this doesn't break again if the constant is renamed upstream.
+ */
+private const val MUSIC_SONGS_CONTENT_FILTER: String = "music_songs"
+
+/**
  * YouTube Music-only search client backed by NewPipe Extractor.
  *
  * This avoids the official YouTube Data API and restricts results to
@@ -28,19 +35,15 @@ internal class YouTubeMusicSearchClientImpl(
             // Use the standard YouTube service and apply a YouTube Music filter in the query.
             val service = ServiceList.YouTube
 
-            // Newer extractor versions moved from raw string content-filter keys to FilterItem
-            // objects looked up from the factory's available filter groups.
-            val musicSongsFilter = service.searchQHFactory.availableContentFilter
-                .filterGroups
-                .flatMap { it.filterItems.toList() }
-                .firstOrNull { it.name == "music_songs" }
-                ?: error("Could not find music_songs content filter in extractor")
-
-            // Build a search query handler for this service, restricted to YouTube Music songs.
+            // Upstream NewPipeExtractor takes raw string content-filter keys here, and a
+            // single string (not a list) for the sort filter. The MetrolistGroup fork this
+            // project used to depend on had moved to FilterItem objects looked up from
+            // searchQHFactory.availableContentFilter.filterGroups -- that API does not exist
+            // upstream, so don't reintroduce it.
             val queryHandler = service.searchQHFactory.fromQuery(
                 term,
-                listOf(musicSongsFilter),
-                emptyList(),
+                listOf(MUSIC_SONGS_CONTENT_FILTER),
+                "",
             )
 
             // Perform a YouTube Music search for the query term.

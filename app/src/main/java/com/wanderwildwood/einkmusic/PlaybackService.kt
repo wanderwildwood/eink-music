@@ -173,7 +173,7 @@ class PlaybackService : MediaSessionService() {
 
             val (resolvedUrl, resolverLabel) = runBlocking(Dispatchers.IO) {
                 try {
-                    app.youTubeInnertubeClient.getBestAudioUrl(videoId) to "Innertube/Piped"
+                    app.youTubeInnertubeClient.getBestAudioUrl(videoId) to "Innertube"
                 } catch (_: Exception) {
                     app.youTubeStreamResolver.getBestAudioUrl(videoId) to "NewPipe"
                 }

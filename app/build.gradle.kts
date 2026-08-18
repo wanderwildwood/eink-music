@@ -14,8 +14,8 @@ android {
         applicationId = "com.wanderwildwood.einkmusic"
         minSdk = 28
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 2
+        versionName = "1.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -104,7 +104,7 @@ dependencies {
     implementation("androidx.media3:media3-session:1.3.1")
     implementation("androidx.media3:media3-ui:1.3.1")
 
-    implementation("com.github.MetrolistGroup:MetrolistExtractor:3cd3341") {
+    implementation("com.github.TeamNewPipe:NewPipeExtractor:v0.26.5") {
         exclude(group = "com.google.protobuf")
     }
 

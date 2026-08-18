@@ -133,12 +133,14 @@ class YouTubeStreamResolver(private val client: OkHttpClient = OkHttpClient()) {
                 val body = response.body?.string()
                 val latestUrl = response.request.url.toString()
 
+                // Upstream NewPipeExtractor's Response takes the body as a single String;
+                // the MetrolistGroup fork additionally carried a ByteArray copy. Don't add
+                // that argument back -- upstream has no such constructor.
                 return Response(
                     response.code,
                     response.message,
                     response.headers.toMultimap(),
                     body,
-                    body?.toByteArray(),
                     latestUrl,
                 )
             }
@@ -149,32 +151,9 @@ class YouTubeStreamResolver(private val client: OkHttpClient = OkHttpClient()) {
                 return toExtractorResponse(response)
             }
 
-            override fun executeAsync(
-                request: Request,
-                callback: Downloader.AsyncCallback?,
-            ): org.schabi.newpipe.extractor.downloader.CancellableCall {
-                val okRequest = buildOkHttpRequest(request)
-                val call = client.newCall(okRequest)
-                val cancellableCall = org.schabi.newpipe.extractor.downloader.CancellableCall(call)
-
-                call.enqueue(object : okhttp3.Callback {
-                    override fun onFailure(call: okhttp3.Call, e: java.io.IOException) {
-                        cancellableCall.setFinished()
-                        callback?.onError(e)
-                    }
-
-                    override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
-                        cancellableCall.setFinished()
-                        try {
-                            val extractorResponse = toExtractorResponse(response)
-                            callback?.onSuccess(extractorResponse)
-                        } catch (e: Exception) {
-                            callback?.onError(e)
-                        }
-                    }
-                })
-
-                return cancellableCall
-            }
+            // NOTE: the MetrolistGroup fork also required an executeAsync() override using
+            // Downloader.AsyncCallback / CancellableCall. Upstream NewPipeExtractor has no
+            // async API at all, and nothing in this app ever called it (extraction already
+            // runs inside withContext(Dispatchers.IO)), so it was dropped in the port.
         }
 }
