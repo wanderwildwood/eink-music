@@ -91,25 +91,87 @@ fun NowPlayingScreen(
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // In-content top bar with back affordance (no Scaffold top app bar here)
+        // In-content top bar with back affordance (no Scaffold top app bar here).
+        // The queue actions sit on this line rather than in a row of their own at the bottom:
+        // they belong to the queue, not to the track, and putting them here leaves the page a
+        // single column of title, progress and transport.
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable(onClick = onBackClick),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = "Back",
-            )
+            // Only the arrow and the title navigate back - the whole row used to, which would
+            // now swallow taps meant for the actions.
+            Row(
+                modifier = Modifier.clickable(onClick = onBackClick),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Back",
+                )
 
-            Spacer(modifier = Modifier.width(12.dp))
+                Spacer(modifier = Modifier.width(12.dp))
 
-            Text(
-                text = "Now Playing",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-            )
+                Text(
+                    text = "Now Playing",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                )
+            }
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            IconButton(onClick = onAddToPlaylistClick) {
+                Icon(
+                    imageVector = Icons.Outlined.PlaylistAdd,
+                    contentDescription = "Add to playlist",
+                )
+            }
+
+            IconButton(onClick = onShuffleClick) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Icon(
+                        imageVector = Icons.Outlined.Shuffle,
+                        contentDescription = "Shuffle queue",
+                    )
+                    if (isShuffleOn) {
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Box(
+                            modifier = Modifier
+                                .size(4.dp)
+                                .background(
+                                    color = MaterialTheme.colorScheme.primary,
+                                    shape = CircleShape,
+                                ),
+                        )
+                    }
+                }
+            }
+
+            IconButton(onClick = onRepeatClick) {
+                val (icon, description, isActive) = when (repeatMode) {
+                    RepeatMode.OFF -> Triple(Icons.Outlined.Repeat, "Repeat off", false)
+                    RepeatMode.QUEUE -> Triple(Icons.Outlined.Repeat, "Repeat queue", true)
+                    RepeatMode.ONE -> Triple(Icons.Outlined.RepeatOne, "Repeat current song", true)
+                }
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = description,
+                    )
+                    if (isActive) {
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Box(
+                            modifier = Modifier
+                                .size(4.dp)
+                                .background(
+                                    color = MaterialTheme.colorScheme.primary,
+                                    shape = CircleShape,
+                                ),
+                        )
+                    }
+                }
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -272,7 +334,8 @@ fun NowPlayingScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Bottom row for secondary actions (e.g. shuffle, repeat, add to playlist / library)
+        // Bottom row for actions about this track rather than the queue: adding it to the
+        // library, downloading it, and where it came from. Queue actions moved to the top bar.
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
@@ -299,58 +362,6 @@ fun NowPlayingScreen(
                         Icon(
                             imageVector = Icons.Outlined.Download,
                             contentDescription = "Download",
-                        )
-                    }
-                }
-            }
-
-            IconButton(onClick = onAddToPlaylistClick) {
-                Icon(
-                    imageVector = Icons.Outlined.PlaylistAdd,
-                    contentDescription = "Add to playlist",
-                )
-            }
-
-            IconButton(onClick = onShuffleClick) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(
-                        imageVector = Icons.Outlined.Shuffle,
-                        contentDescription = "Shuffle queue",
-                    )
-                    if (isShuffleOn) {
-                        Spacer(modifier = Modifier.height(2.dp))
-                        Box(
-                            modifier = Modifier
-                                .size(4.dp)
-                                .background(
-                                    color = MaterialTheme.colorScheme.primary,
-                                    shape = CircleShape,
-                                ),
-                        )
-                    }
-                }
-            }
-
-            IconButton(onClick = onRepeatClick) {
-                val (icon, description, isActive) = when (repeatMode) {
-                    RepeatMode.OFF -> Triple(Icons.Outlined.Repeat, "Repeat off", false)
-                    RepeatMode.QUEUE -> Triple(Icons.Outlined.Repeat, "Repeat queue", true)
-                    RepeatMode.ONE -> Triple(Icons.Outlined.RepeatOne, "Repeat current song", true)
-                }
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(
-                        imageVector = icon,
-                        contentDescription = description,
-                    )
-                    if (isActive) {
-                        Spacer(modifier = Modifier.height(2.dp))
-                        Box(
-                            modifier = Modifier
-                                .size(4.dp)
-                                .background(
-                                    color = MaterialTheme.colorScheme.primary,
-                                    shape = CircleShape,
-                                ),
                         )
                     }
                 }
